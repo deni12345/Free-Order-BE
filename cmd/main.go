@@ -1,47 +1,31 @@
 package main
 
 import (
-	"context"
-	"github/lambda-microservice/routes"
+	"github/lambda-microservice/api"
+	"github/lambda-microservice/api/middleware"
+	"net/http"
 
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/aws/aws-sdk-go-v2/service/s3"
-	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
-	"github.com/gin-gonic/gin"
-)
-
-var (
-	client    *s3.Client
-	ginLambda *ginadapter.GinLambda
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	// bucket := os.Getenv("BUCKET_NAME")
-	// fileName := os.Getenv("FILE_NAME")
-	// region := os.Getenv("REGION")
+	s := api.NewServer()
 
-	// cfg, err := config.LoadDefaultConfig(context.TODO(),
-	// 	config.WithRegion(region),
-	// )
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// client = s3.NewFromConfig(cfg)
-	r := buildEngine()
-	routes.SetUserRoutes(r)
-
-	ginLambda = ginadapter.New(r)
-	lambda.Start(handler)
+	r := mux.NewRouter().PathPrefix("/api").Subrouter()
+	r.Use(middleware.ContentTypeJsonMiddleware)
+	private(r, s)
+	http.Handle("/", r)
+	http.ListenAndServe(":8080", nil)
 }
 
-func buildEngine() *gin.Engine {
-	engine := gin.Default()
-	engine.Use(gin.Logger())
-	engine.Use(gin.Recovery())
-	return engine
-}
+// func newServer(l logic.Logic) *mux.Route {
+// 	r := mux.NewRouter()
+// 	api := r.PathPrefix("/api/").Subrouter()
+// 	public(api, l)
+// 	return r
+// }
 
-func handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	return ginLambda.ProxyWithContext(ctx, req)
+func private(r *mux.Router, s api.Server) {
+	pri := r.PathPrefix("/private").Subrouter()
+	pri.HandleFunc("/create-user", s.CreateUser).Methods("GET")
 }

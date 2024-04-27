@@ -18,6 +18,14 @@ type GormLogrus struct {
 	IgnoreRecordNotFoundError bool
 }
 
+func NewLogger() *GormLogrus {
+	return &GormLogrus{
+		Logger:                    *log.New(),
+		SlowThreshold:             time.Second,
+		IgnoreRecordNotFoundError: true,
+	}
+}
+
 // LogMode(LogLevel) Interface
 // 	Info(context.Context, string, ...interface{})
 // 	Warn(context.Context, string, ...interface{})
@@ -68,4 +76,25 @@ func (l *GormLogrus) Trace(ctx context.Context, begin time.Time, fc func() (sql 
 		}
 	}
 
+}
+
+func (l *GormLogrus) SetLevel(level log.Level) *GormLogrus {
+	l.Logger.SetLevel(level)
+	return l
+}
+
+func (l *GormLogrus) SetSlowThreshold(threshold time.Duration) {
+	if threshold == 0 {
+		l.SlowThreshold = time.Microsecond
+		return
+	}
+	l.SlowThreshold = threshold
+}
+
+func (l *GormLogrus) SetIgnoreRecordNotFoundError(ignore *bool) {
+	if ignore == nil {
+		l.IgnoreRecordNotFoundError = true
+		return
+	}
+	l.IgnoreRecordNotFoundError = *ignore
 }

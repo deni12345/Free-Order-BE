@@ -35,7 +35,7 @@ func NewDAO(conf Config) *DAO {
 		conf.Host,
 		conf.Port,
 		conf.DBName,
-	)), &gorm.Config{Logger: &custom.GormLogrus{Logger: *logrus.New()}})
+	)), &gorm.Config{Logger: custom.NewLogger().SetLevel(logrus.InfoLevel)})
 	if err != nil {
 		log.Fatalf("Can not connect db on error: %s", err)
 		return nil

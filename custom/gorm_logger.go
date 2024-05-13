@@ -18,7 +18,7 @@ type GormLogrus struct {
 	IgnoreRecordNotFoundError bool
 }
 
-func NewLogger() *GormLogrus {
+func NewGormLogrus() *GormLogrus {
 	return &GormLogrus{
 		Logger:                    *log.New(),
 		SlowThreshold:             time.Second,

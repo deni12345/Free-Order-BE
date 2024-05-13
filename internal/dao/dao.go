@@ -28,6 +28,7 @@ type DAO struct {
 }
 
 func NewDAO(conf Config) *DAO {
+	logger := custom.NewGormLogrus().SetLevel(logrus.InfoLevel)
 	db, err := gorm.Open(mysql.Open(fmt.Sprintf(
 		DNS,
 		conf.User,
@@ -35,13 +36,14 @@ func NewDAO(conf Config) *DAO {
 		conf.Host,
 		conf.Port,
 		conf.DBName,
-	)), &gorm.Config{Logger: custom.NewLogger().SetLevel(logrus.InfoLevel)})
+	)), &gorm.Config{Logger: logger})
 	if err != nil {
 		log.Fatalf("Can not connect db on error: %s", err)
 		return nil
 	}
 
+	userImpl := &UserImpl{client: db}
 	return &DAO{
-		UserDAO: &UserImpl{client: db},
+		UserDAO: userImpl,
 	}
 }

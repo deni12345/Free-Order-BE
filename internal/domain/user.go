@@ -4,6 +4,7 @@ const (
 	UserTable = "User"
 )
 
+type Users []*User
 type User struct {
 	ID       *uint  `gorm:"column:Id;"`
 	UserName string `gorm:"column:UserName;"`
@@ -12,4 +13,11 @@ type User struct {
 
 func (User) TableName() string {
 	return UserTable
+}
+
+func (mu *User) CheckNil() *User {
+	if mu.ID != nil {
+		return mu
+	}
+	return nil
 }

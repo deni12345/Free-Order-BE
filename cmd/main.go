@@ -3,6 +3,7 @@ package main
 import (
 	"github/lambda-microservice/api"
 	"github/lambda-microservice/api/middleware"
+	"github/lambda-microservice/custom"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -15,6 +16,7 @@ func main() {
 	r.Use(middleware.ContentTypeJsonMiddleware)
 	private(r, s)
 	http.Handle("/", r)
+	custom.PrintLogo()
 	http.ListenAndServe(":8080", nil)
 }
 

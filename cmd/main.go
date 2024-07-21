@@ -29,5 +29,5 @@ func main() {
 
 func private(r *mux.Router, s api.Server) {
 	pri := r.PathPrefix("/private").Subrouter()
-	pri.HandleFunc("/create-user", s.CreateUser).Methods("GET")
+	pri.HandleFunc("/create-user", s.SignUp).Methods("GET")
 }

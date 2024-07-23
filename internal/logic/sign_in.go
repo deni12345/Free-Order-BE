@@ -2,8 +2,8 @@ package logic
 
 import (
 	"context"
+	"fmt"
 	"github/lambda-microservice/models"
-	"log"
 )
 
 func (l *LogicImpl) SignIn(ctx context.Context, req *models.User) (*models.SignInResp, error) {
@@ -11,15 +11,21 @@ func (l *LogicImpl) SignIn(ctx context.Context, req *models.User) (*models.SignI
 	if err != nil {
 		return nil, err
 	}
-	err = l.CheckExistedUser(dmu)
+	user, err := l.Client.UserDAO.Find(dmu)
+	if err != nil {
+		fmt.Printf("[Logic] FindUser on err: %v", err)
+		return nil, err
+	}
+	if !req.ValidIdentity(user) {
+		return nil, fmt.Errorf("[Logic] invalid user identity")
+	}
+	tokenStr, err := l.createToken(user)
 	if err != nil {
 		return nil, err
 	}
-	err = l.Client.UserDAO.Create(dmu)
-	if err != nil {
-		log.Printf("Logic CreateUser on err: %v", err)
-		return nil, err
-	}
-
-	return nil, nil
+	return &models.SignInResp{
+		Token:    tokenStr,
+		UserName: user.UserName,
+		Role:     user.GetRoles(),
+	}, nil
 }

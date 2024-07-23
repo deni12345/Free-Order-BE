@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func (l *LogicImpl) CreateUser(req *models.User) (*models.User, error) {
+func (l *LogicImpl) SignUp(req *models.User) (*models.User, error) {
 	dmu, err := req.BuildDomainUser()
 	if err != nil {
 		return nil, err
@@ -18,7 +18,7 @@ func (l *LogicImpl) CreateUser(req *models.User) (*models.User, error) {
 	}
 	err = l.Client.UserDAO.Create(dmu)
 	if err != nil {
-		log.Printf("Logic CreateUser on err: %v", err)
+		log.Printf("[Logic] SignUp on err: %v", err)
 		return nil, err
 	}
 
@@ -28,11 +28,11 @@ func (l *LogicImpl) CreateUser(req *models.User) (*models.User, error) {
 func (l *LogicImpl) CheckExistedUser(userReq *domain.User) error {
 	dUser, err := l.Client.UserDAO.Find(userReq)
 	if err != nil {
-		log.Printf("Logic FindUser on err: %v", err)
+		log.Printf("[Logic] FindUser on err: %v", err)
 		return err
 	}
 	if dUser != nil {
-		return fmt.Errorf("Logic CreateUser on err: User already existed")
+		return fmt.Errorf("[Logic] SignUp on err: User already existed")
 	}
 	return nil
 }

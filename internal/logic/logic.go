@@ -7,11 +7,12 @@ import (
 )
 
 type Logic interface {
-	CreateUser(*models.User) (*models.User, error)
+	SignUp(*models.User) (*models.User, error)
 	SignIn(context.Context, *models.User) (*models.SignInResp, error)
 }
 type LogicImpl struct {
-	Client *dao.DAO
+	SecretKey []byte
+	Client    *dao.DAO
 }
 
 func NewLogicImpl() *LogicImpl {
@@ -19,10 +20,11 @@ func NewLogicImpl() *LogicImpl {
 		Port:     "3306",
 		Host:     "localhost",
 		User:     "root",
-		Password: "password",
+		Password: "",
 		DBName:   "fodb",
 	})
 	return &LogicImpl{
-		Client: dao,
+		Client:    dao,
+		SecretKey: []byte("Idasdasdasdnasdnjknxzm1323"),
 	}
 }

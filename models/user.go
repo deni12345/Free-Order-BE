@@ -6,15 +6,14 @@ import (
 )
 
 type User struct {
-	UserID   *int64 `json:"user_id,omitempty"`
 	UserName string `json:"user_name"`
 	Password string `json:"password,omitempty"`
 }
 
-type FindUserResp struct {
-	Token    string `json:"token"`
-	UserID   int64  `json:"user_id,omitempty"`
-	UserName string `json:"user_name"`
+type SignInResp struct {
+	Token    string   `json:"token"`
+	Role     []string `json:"role"`
+	UserName string   `json:"user_name"`
 }
 
 func (mu *User) BuildDomainUser() (*domain.User, error) {
@@ -24,14 +23,21 @@ func (mu *User) BuildDomainUser() (*domain.User, error) {
 		return nil, err
 	}
 	return &domain.User{
-		UserName: mu.UserName,
-		Password: hashPasword,
+		UserName:     mu.UserName,
+		HashPassword: hashPasword,
 	}, nil
 }
 
 func GetModelUser(dmu *domain.User) *User {
 	return &User{
 		UserName: dmu.UserName,
-		Password: dmu.Password,
+		Password: dmu.HashPassword,
 	}
+}
+
+func (u *User) ValidIdentity(dmu *domain.User) bool {
+	if u != nil {
+		return CheckPasswordHash(u.Password, dmu.HashPassword)
+	}
+	return false
 }

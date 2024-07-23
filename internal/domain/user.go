@@ -1,6 +1,8 @@
 package domain
 
-import "time"
+import (
+	"time"
+)
 
 const (
 	UserTable     = "User"
@@ -9,21 +11,38 @@ const (
 
 type Users []*User
 type User struct {
-	ID       *uint    `gorm:"column:Id;primaryKey"`
-	UserName string   `gorm:"column:UserName;"`
-	Password string   `gorm:"column:Password;"`
-	UserInfo UserInfo `gorm:"foreignKey:UserName;references:UserId"`
+	ID           *uint       `gorm:"column:Id;primaryKey"`
+	UserName     string      `gorm:"column:UserName;"`
+	HashPassword string      `gorm:"column:Password;"`
+	UserInfo     []*UserInfo `gorm:"foreignKey:UserId;references:Id"`
 }
 
 func (User) TableName() string {
 	return UserTable
 }
 
-func (mu *User) CheckNil() *User {
-	if mu.ID != nil {
-		return mu
+func (u *User) GetName() string {
+	if u != nil {
+		return u.UserName
+	}
+	return ""
+}
+
+func (u *User) CheckNil() *User {
+	if u.ID != nil {
+		return u
 	}
 	return nil
+}
+
+func (u *User) GetRoles() []string {
+	roles := []string{}
+	if u != nil {
+		for _, v := range u.UserInfo {
+			roles = append(roles, v.GetRole())
+		}
+	}
+	return roles
 }
 
 type UserInfo struct {
@@ -36,4 +55,11 @@ type UserInfo struct {
 
 func (UserInfo) TableName() string {
 	return UserInfoTable
+}
+
+func (ui *UserInfo) GetRole() string {
+	if ui != nil {
+		return ui.Role
+	}
+	return ""
 }

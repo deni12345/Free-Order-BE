@@ -1,7 +1,7 @@
 SAMPLE_BINARY_NAME=main
 
 MIGRATE_SOURCE=file://database/script
-DATABASE='mysql://root:@tcp(localhost:3306)/fodb?charset=utf8mb4&parseTime=True&loc=Local'
+DATABASE='mysql://root:password@tcp(localhost:3306)/fodb?charset=utf8mb4&parseTime=True&loc=Local'
 
 build: 
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o main ./cmd/main.go

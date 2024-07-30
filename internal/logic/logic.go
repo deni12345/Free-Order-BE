@@ -20,7 +20,7 @@ func NewLogicImpl() *LogicImpl {
 		Port:     "3306",
 		Host:     "localhost",
 		User:     "root",
-		Password: "",
+		Password: "password",
 		DBName:   "fodb",
 	})
 	return &LogicImpl{

@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	. "github/lambda-microservice/api/middleware"
 	"github/lambda-microservice/models"
 	"net/http"
 )

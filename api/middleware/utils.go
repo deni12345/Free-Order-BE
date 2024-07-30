@@ -1,4 +1,4 @@
-package api
+package middleware
 
 import (
 	"encoding/json"
@@ -16,6 +16,10 @@ func BadRequest(w http.ResponseWriter, err error) {
 
 func InternalError(w http.ResponseWriter, err error) {
 	httpJSONError(w, err.Error(), http.StatusInternalServerError)
+}
+
+func UnauthenticatedError(w http.ResponseWriter, err error) {
+	httpJSONError(w, err.Error(), http.StatusUnauthorized)
 }
 
 func httpJSONError(w http.ResponseWriter, error string, code int) {

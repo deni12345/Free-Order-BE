@@ -1,8 +1,10 @@
 package api
 
 import (
-	"github/lambda-microservice/api/middleware"
+	. "github/lambda-microservice/api/middleware"
 	"github/lambda-microservice/internal/logic"
+	"net/http"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -14,25 +16,35 @@ type Server struct {
 
 func NewServer() *Server {
 	l := logic.NewLogicImpl()
-	r := mux.NewRouter().PathPrefix("/api").Subrouter()
-	r.Use(middleware.ContentTypeJsonMiddleware)
-
 	s := &Server{
 		logic: l,
-		Mux:   r,
 	}
-	s.publicAPI()
+
+	r := mux.NewRouter()
+	r.Use(ContentTypeJsonMiddleware)
+	mount(r, "/api/public", s.publicAPI())
+	mount(r, "/api/private", s.privateAPI())
+	s.Mux = r
+
 	return s
 }
 
-func (s *Server) publicAPI() {
-	sub := s.Mux.PathPrefix("/public").Subrouter()
-	sub.HandleFunc("/sign-in", s.SignIn).Methods("POST")
-	sub.HandleFunc("/sign-up", s.SignUp).Methods("POST")
+func (s *Server) publicAPI() http.Handler {
+	router := mux.NewRouter()
+	router.Path("/sign-in").HandlerFunc(s.SignIn).Methods("POST")
+	router.HandleFunc("/sign-up", s.SignUp).Methods("POST")
+	return router
 }
 
-// func (s *Server) privateAPI() http.Handler {
-// 	h := mux.NewRouter()
-// 	h.HandleFunc("/sign-in", s.SignUp).Methods("GET")
-// 	return h
-// }
+func (s *Server) privateAPI() http.Handler {
+	h := mux.NewRouter()
+	return h
+}
+
+func mount(r *mux.Router, path string, handler http.Handler) {
+	r.PathPrefix(path).Handler(
+		http.StripPrefix(strings.TrimSuffix(path, "/"),
+			handler,
+		),
+	)
+}

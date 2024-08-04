@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"fmt"
+	"github/lambda-microservice/internal/auth"
 	"github/lambda-microservice/models"
 )
 
@@ -19,7 +20,7 @@ func (l *LogicImpl) SignIn(ctx context.Context, req *models.User) (*models.SignI
 	if !req.ValidIdentity(user) {
 		return nil, fmt.Errorf("[Logic] invalid user identity")
 	}
-	tokenStr, err := l.createToken(user)
+	tokenStr, err := auth.CreateToken(user)
 	if err != nil {
 		return nil, err
 	}

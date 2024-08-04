@@ -1,3 +1,6 @@
+# cloud.google.com/go/compute/metadata v0.3.0
+## explicit; go 1.19
+cloud.google.com/go/compute/metadata
 # github.com/go-sql-driver/mysql v1.7.0
 ## explicit; go 1.13
 github.com/go-sql-driver/mysql
@@ -20,10 +23,25 @@ github.com/sirupsen/logrus
 ## explicit; go 1.18
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
+# golang.org/x/oauth2 v0.21.0
+## explicit; go 1.18
+golang.org/x/oauth2
+golang.org/x/oauth2/authhandler
+golang.org/x/oauth2/google
+golang.org/x/oauth2/google/externalaccount
+golang.org/x/oauth2/google/internal/externalaccountauthorizeduser
+golang.org/x/oauth2/google/internal/impersonate
+golang.org/x/oauth2/google/internal/stsexchange
+golang.org/x/oauth2/internal
+golang.org/x/oauth2/jws
+golang.org/x/oauth2/jwt
 # golang.org/x/sys v0.19.0
 ## explicit; go 1.18
 golang.org/x/sys/unix
 golang.org/x/sys/windows
+# gopkg.in/yaml.v2 v2.4.0
+## explicit; go 1.15
+gopkg.in/yaml.v2
 # gorm.io/driver/mysql v1.5.6
 ## explicit; go 1.14
 gorm.io/driver/mysql

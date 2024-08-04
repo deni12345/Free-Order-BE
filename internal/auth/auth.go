@@ -1,30 +1,31 @@
-package logic
+package auth
 
 import (
 	"fmt"
+	"github/lambda-microservice/config"
 	"github/lambda-microservice/internal/domain"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func (l *LogicImpl) createToken(user *domain.User) (string, error) {
+func CreateToken(user *domain.User) (string, error) {
 	token := jwt.NewWithClaims(
 		jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"userId": user.ID,
 			"exp":    time.Now().Add(24 * time.Hour).Unix(),
 		})
-	tokenStr, err := token.SignedString(l.SecretKey)
+	tokenStr, err := token.SignedString(config.Value.SecretKey)
 	if err != nil {
 		return "", err
 	}
 	return tokenStr, nil
 }
 
-func (l *LogicImpl) verifyToken(tokenStr string) error {
-	token, err := jwt.Parse(tokenStr, func(t *jwt.Token) (interface{}, error) {
-		return l.SecretKey, nil
+func VerifyToken(tokenStr string, claim *jwt.MapClaims) error {
+	token, err := jwt.ParseWithClaims(tokenStr, claim, func(t *jwt.Token) (interface{}, error) {
+		return config.Value.SecretKey, nil
 	})
 	if err != nil {
 		return err

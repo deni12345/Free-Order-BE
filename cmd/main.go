@@ -13,5 +13,5 @@ func main() {
 
 	custom.PrintLogo()
 	logrus.Info("run server in localhost mode [:8080]")
-	http.ListenAndServe(":8080", server.Mux)
+	http.ListenAndServe("localhost:8080", server.Router)
 }

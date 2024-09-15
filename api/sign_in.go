@@ -11,14 +11,14 @@ import (
 func (s Server) SignIn(w http.ResponseWriter, r *http.Request) {
 	req := &models.User{}
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
-		fmt.Printf("[API] SignIn on err: %s", err)
+		fmt.Printf("[API] SignIn on err: %s \n", err)
 		BadRequest(w, err)
 		return
 	}
 
 	resp, err := s.logic.SignIn(r.Context(), req)
 	if err != nil {
-		fmt.Printf("[API] SignIn on err: %s", err)
+		fmt.Printf("[API] SignIn on err: %s \n", err)
 		InternalError(w, err)
 		return
 	}

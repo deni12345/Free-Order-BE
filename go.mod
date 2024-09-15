@@ -3,13 +3,14 @@ module github/lambda-microservice
 go 1.18
 
 require (
+	github.com/gorilla/websocket v1.5.3
+	golang.org/x/oauth2 v0.21.0
 	gorm.io/driver/mysql v1.5.6
 	gorm.io/gorm v1.25.9
 )
 
 require (
 	cloud.google.com/go/compute/metadata v0.3.0 // indirect
-	golang.org/x/oauth2 v0.21.0 // indirect
 	golang.org/x/sys v0.19.0 // indirect
 )
 

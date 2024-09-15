@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func (s Server) SignUp(w http.ResponseWriter, r *http.Request) {
+func (s Server) OauthGoogleCallBack(w http.ResponseWriter, r *http.Request) {
 	req := &models.User{}
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		fmt.Printf("[API] SignIn on err: %s \n", err)
@@ -16,7 +16,7 @@ func (s Server) SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := s.logic.SignUp(req)
+	resp, err := s.logic.SignIn(r.Context(), req)
 	if err != nil {
 		fmt.Printf("[API] SignIn on err: %s \n", err)
 		InternalError(w, err)

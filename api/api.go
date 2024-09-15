@@ -3,44 +3,44 @@ package api
 import (
 	. "github/lambda-microservice/api/middleware"
 	"github/lambda-microservice/internal/logic"
-	"github/lambda-microservice/internal/oauth2"
 	"net/http"
 	"strings"
 
 	"github.com/gorilla/mux"
-	"github.com/sirupsen/logrus"
+	"github.com/gorilla/websocket"
 )
 
 type Server struct {
-	Mux   *mux.Router
-	logic logic.Logic
+	Router   *mux.Router
+	logic    logic.Logic
+	upgrader websocket.Upgrader
+	connsMap map[*websocket.Conn]bool
 }
 
 func NewServer() *Server {
-	l := logic.NewLogicImpl()
 	s := &Server{
-		logic: l,
+		Router:   mux.NewRouter(),
+		logic:    logic.NewLogicImpl(),
+		upgrader: configWebSocketUpgrader(),
 	}
 
-	r := mux.NewRouter()
-	r.Use(ContentTypeJsonMiddleware)
-	mount(r, "/api/public", s.publicAPI())
-	mount(r, "/api/private", s.privateAPI())
-	mount(r, "/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		logrus.Info("default route")
+	s.Router.Use(ContentTypeJsonMiddleware)
+	mount(s.Router, "/api/public", s.publicAPI())
+	mount(s.Router, "/api/private", s.privateAPI())
+	mount(s.Router, "/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Not Found"))
 	}))
-	s.Mux = r
-
 	return s
 }
 
 func (s *Server) publicAPI() http.Handler {
 	router := mux.NewRouter()
 	router.Path("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
-	router.Path("/sign-in").HandlerFunc(s.SignIn).Methods("POST")
+	router.HandleFunc("/sign-in", s.SignIn).Methods("POST")
 	router.HandleFunc("/sign-up", s.SignUp).Methods("POST")
-	router.HandleFunc("/auth/google/login", oauth2.OauthGoogleLogin).Methods("GET")
-	router.HandleFunc("/auth/google/callback", oauth2.OauthGoogleCallBack).Methods("GET")
+	router.HandleFunc("/auth/google/login", s.OauthGoogleLogin).Methods("GET")
+	router.HandleFunc("/auth/google/callback", s.OauthGoogleCallBack).Methods("GET")
+	router.HandleFunc("/ws", s.HandleWebSocket).Methods("GET")
 	return router
 }
 
@@ -55,4 +55,14 @@ func mount(r *mux.Router, path string, handler http.Handler) {
 			handler,
 		),
 	)
+}
+
+func configWebSocketUpgrader() websocket.Upgrader {
+	return websocket.Upgrader{
+		ReadBufferSize:  1024,
+		WriteBufferSize: 1024,
+		CheckOrigin: func(r *http.Request) bool {
+			return true
+		},
+	}
 }

@@ -46,7 +46,13 @@ func OauthGoogleCallBack(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-	fmt.Fprintf(w, "UserInfo: %s\n", data)
+	cookie := http.Cookie{
+		Name:  "jwt-token",
+		Value: string(data),
+		Path:  "/",
+	}
+	http.SetCookie(w, &cookie)
+	http.Redirect(w, r, "http://localhost:3000/dashboard", http.StatusPermanentRedirect)
 }
 
 func getUserDataFromGoogle(code string) ([]byte, error) {

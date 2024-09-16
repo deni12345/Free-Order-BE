@@ -9,6 +9,8 @@ import (
 type Logic interface {
 	SignUp(*models.User) (*models.User, error)
 	SignIn(context.Context, *models.User) (*models.SignInResp, error)
+
+	CreateSheet()
 }
 type LogicImpl struct {
 	SecretKey []byte

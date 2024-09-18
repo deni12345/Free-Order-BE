@@ -2,7 +2,6 @@ package models
 
 import (
 	"github/lambda-microservice/internal/domain"
-	"log"
 )
 
 type User struct {
@@ -16,16 +15,18 @@ type SignInResp struct {
 	UserName string   `json:"user_name"`
 }
 
-func (mu *User) BuildDomainUser() (*domain.User, error) {
+func (mu *User) BuildDomainUser() *domain.User {
+	if mu == nil {
+		return nil
+	}
 	hashPasword, err := HashPassword(mu.Password)
 	if err != nil {
-		log.Printf("Logic build domain user on err: %v", err)
-		return nil, err
+		return nil
 	}
 	return &domain.User{
 		UserName:     mu.UserName,
 		HashPassword: hashPasword,
-	}, nil
+	}
 }
 
 func GetModelUser(dmu *domain.User) *User {

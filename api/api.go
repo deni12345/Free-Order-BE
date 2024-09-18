@@ -45,8 +45,8 @@ func (s *Server) publicAPI() http.Handler {
 }
 
 func (s *Server) privateAPI() http.Handler {
-	h := mux.NewRouter()
-	return h
+	router := mux.NewRouter()
+	return router
 }
 
 func mount(r *mux.Router, path string, handler http.Handler) {

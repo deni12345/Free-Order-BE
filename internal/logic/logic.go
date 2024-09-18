@@ -10,7 +10,9 @@ type Logic interface {
 	SignUp(*models.User) (*models.User, error)
 	SignIn(context.Context, *models.User) (*models.SignInResp, error)
 
-	CreateSheet()
+	CreateSheet(context.Context, *models.Sheet) (*models.Sheet, error)
+	UpdateSheet(context.Context, *models.Sheet) error
+	RemoveSheet(context.Context, *models.Sheet) error
 }
 type LogicImpl struct {
 	SecretKey []byte

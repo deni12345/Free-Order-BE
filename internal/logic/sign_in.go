@@ -8,9 +8,9 @@ import (
 )
 
 func (l *LogicImpl) SignIn(ctx context.Context, req *models.User) (*models.SignInResp, error) {
-	dmu, err := req.BuildDomainUser()
-	if err != nil {
-		return nil, err
+	dmu := req.BuildDomainUser()
+	if dmu == nil {
+		return nil, fmt.Errorf("[Logic] BuildDomainUser on err")
 	}
 	user, err := l.Client.UserDAO.Find(dmu)
 	if err != nil {

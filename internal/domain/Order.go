@@ -1,14 +1,20 @@
 package domain
 
+import "time"
+
 const (
-	OrderTable = "User"
+	OrderTable = "Order"
 )
 
+type Orders []*Order
+
 type Order struct {
-	ID       *uint  `gorm:"column:Id;"`
-	FoodName string `gorm:"column:FoodName;"`
-	Amount   uint   `gorm:"column:Amount;"`
-	CreateAt string `gorm:"column:Amount;"`
+	ID       *uint     `gorm:"column:Id;"`
+	SheetId  *uint     `gorm:"foreignKey:SheetId;references:Id"`
+	UserId   *uint     `gorm:"foreignKey:UserId;references:Id"`
+	FoodName string    `gorm:"column:FoodName;"`
+	Amount   uint      `gorm:"column:Amount;"`
+	CreateAt time.Time `gorm:"column:CreatAt;"`
 }
 
 func (Order) TableName() string {

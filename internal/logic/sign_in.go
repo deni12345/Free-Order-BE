@@ -8,11 +8,11 @@ import (
 )
 
 func (l *LogicImpl) SignIn(ctx context.Context, req *models.User) (*models.SignInResp, error) {
-	dmu := req.BuildDomainUser()
-	if dmu == nil {
-		return nil, fmt.Errorf("[Logic] BuildDomainUser on err")
+	domainUser := req.BuildDomainUser()
+	if domainUser == nil {
+		return nil, fmt.Errorf("[Logic] BuildDomainUser on err nil domain")
 	}
-	user, err := l.Client.UserDAO.Find(dmu)
+	user, err := l.Client.UserDAO.Find(domainUser)
 	if err != nil {
 		fmt.Printf("[Logic] FindUser on err: %v", err)
 		return nil, err

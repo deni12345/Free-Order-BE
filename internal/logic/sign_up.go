@@ -8,21 +8,21 @@ import (
 )
 
 func (l *LogicImpl) SignUp(req *models.User) (*models.User, error) {
-	dmu := req.BuildDomainUser()
-	if dmu == nil {
-		return nil, fmt.Errorf("[Logic] BuildDomainUser on err")
+	domainUser := req.BuildDomainUser()
+	if domainUser == nil {
+		return nil, fmt.Errorf("[Logic] BuildDomainUser on err nil domain")
 	}
-	err := l.CheckExistedUser(dmu)
+	err := l.CheckExistedUser(domainUser)
 	if err != nil {
 		return nil, err
 	}
-	err = l.Client.UserDAO.Create(dmu)
+	err = l.Client.UserDAO.Create(domainUser)
 	if err != nil {
 		log.Printf("[Logic] SignUp on err: %v", err)
 		return nil, err
 	}
 
-	return models.GetModelUser(dmu), nil
+	return models.GetModelUser(domainUser), nil
 }
 
 func (l *LogicImpl) CheckExistedUser(userReq *domain.User) error {

@@ -24,7 +24,8 @@ type Config struct {
 }
 
 type DAO struct {
-	UserDAO IUserDAO
+	SheetDAO ISheetDAO
+	UserDAO  IUserDAO
 }
 
 func NewDAO(conf Config) *DAO {

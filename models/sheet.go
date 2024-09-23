@@ -7,12 +7,12 @@ import (
 
 type Sheet struct {
 	ID        *uint      `json:"id"`
-	UserID    *uint      ``
+	UserID    *uint      `json:"user_id"`
 	Name      string     `json:"name"`
 	EndDate   string     `json:"end_at"`
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	IsActive  bool       `json:"is_active"`
-	Orders    Orders
+	Orders    Orders     `json:"orders"`
 }
 
 type Orders []*Order
@@ -54,16 +54,36 @@ func (sh *Sheet) GetCreatedAt() *time.Time {
 	return nil
 }
 
-func (sh *Sheet) BuildDomainUser() *domain.Sheet {
+func (sh *Sheet) GetUserID() *uint {
+	if sh != nil {
+		return sh.UserID
+	}
+	return nil
+}
+
+func (sh *Sheet) GetOrders() Orders {
+	if sh != nil {
+		return sh.Orders
+	}
+	return nil
+}
+
+func (sh *Sheet) GetIsActive() bool {
+	if sh != nil {
+		return sh.IsActive
+	}
+	return true
+}
+
+func (sh *Sheet) BuildDomainSheet() *domain.Sheet {
 	if sh == nil {
 		return nil
 	}
 	return &domain.Sheet{
 		ID:       sh.GetID(),
 		Name:     sh.GetName(),
-		CreateAt: sh.GetCreatedAt(),
-		UserId:   new(uint),
-		OrderId:  new(uint),
-		Order:    &domain.Order{},
+		UserId:   sh.GetUserID(),
+		IsActive: sh.GetIsActive(),
+		//Order:  sh.GetOrders(),
 	}
 }

@@ -1,6 +1,8 @@
 # Go-Lambda
-Small Project using: 
+This porject using: 
 - Lambda (not yet)
 - MySQl (local)
 - Grollia/Mux
-- Websocket 
+- Websocket
+  
+Description: 

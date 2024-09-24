@@ -1,2 +1,6 @@
 # Go-Lambda
-Small Project using Lambda, RDS, Gin 
+Small Project using: 
+-Lambda (not yet)
+-MySQl (local)
+-Grollia/Mux
+-Websocket 

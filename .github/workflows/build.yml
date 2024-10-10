@@ -15,8 +15,10 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Log env
-      env: ACTION_ENV: ${{ vars.ACTION_ENV }}
-      run: echo "code is running on: $ACTION_ENV"
+      env: 
+         TEST: ${{ vars.ACTION_ENV }}
+      run:  |
+        echo "code is running on: $TEST"
 
     - name: Set up Go
       uses: actions/setup-go@v4

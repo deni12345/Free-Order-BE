@@ -8,11 +8,15 @@ on:
 
 jobs:
   build:
-
+    environment: dev
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Log env
+      env: ACTION_ENV: ${{ vars.ACTION_ENV }}
+      run: echo "code is running on: $ACTION_ENV"
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -24,11 +28,11 @@ jobs:
       with:
         path: .env
 
-    - name: Install dependencies
+    - name: Install
       run: make install
 
     # - name: Run test
     #   run: make test
 
-    - name: Run build
+    - name: Build
       run: make build

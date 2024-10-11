@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 # Go-Lambda
 This porject using: 
 - Lambda (not yet)
@@ -6,3 +7,7 @@ This porject using:
 - Websocket
   
 Description: 
+=======
+# Go-Lambda
+Small Project using Lambda, RDS, Gin 
+>>>>>>> Stashed changes

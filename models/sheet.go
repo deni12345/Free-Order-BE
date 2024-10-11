@@ -9,7 +9,7 @@ type Sheet struct {
 	ID        *uint      `json:"id"`
 	UserID    *uint      `json:"user_id"`
 	Name      string     `json:"name"`
-	EndDate   string     `json:"end_at"`
+	EndAt     *time.Time `json:"end_at"`
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	IsActive  bool       `json:"is_active"`
 	Orders    Orders     `json:"orders"`

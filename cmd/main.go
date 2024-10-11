@@ -4,11 +4,13 @@ import (
 	"github/lambda-microservice/api"
 	"github/lambda-microservice/custom"
 	"net/http"
+	"os"
 
 	"github.com/sirupsen/logrus"
 )
 
 func main() {
+	logrus.Info("env is", os.Getenv("ACTION_ENV"))
 	server := api.NewServer()
 
 	custom.PrintLogo()

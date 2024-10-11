@@ -5,7 +5,7 @@ DATABASE='mysql://root:password@tcp(localhost:3306)/fodb?charset=utf8mb4&parseTi
 
 build: 
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o main ./cmd/main.go
-	$(USERPROFILE)\Go\bin\build-lambda-zip.exe -o main.zip main
+#	$(USERPROFILE)\Go\bin\build-lambda-zip.exe -o main.zip main
 zip: 
 	$(USERPROFILE)\Go\bin\build-lambda-zip.exe -o main.zip main
 run:

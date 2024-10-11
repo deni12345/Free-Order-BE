@@ -12,7 +12,7 @@ type Logic interface {
 
 	CreateSheet(context.Context, *models.Sheet) (*models.Sheet, error)
 	UpdateSheet(context.Context, *models.Sheet) error
-	RemoveSheet(context.Context, *models.Sheet) error
+	//RemoveSheet(context.Context, *models.Sheet) error
 }
 type LogicImpl struct {
 	SecretKey []byte

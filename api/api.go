@@ -8,13 +8,15 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
+	"golang.org/x/oauth2"
 )
 
 type Server struct {
-	Router   *mux.Router
-	logic    logic.Logic
-	upgrader websocket.Upgrader
-	connsMap map[*websocket.Conn]bool
+	Router      *mux.Router
+	logic       logic.Logic
+	googleOauth *oauth2.Config
+	upgrader    websocket.Upgrader
+	connsMap    map[*websocket.Conn]bool
 }
 
 func NewServer() *Server {
@@ -36,10 +38,18 @@ func NewServer() *Server {
 func (s *Server) publicAPI() http.Handler {
 	router := mux.NewRouter()
 	router.Path("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
+
+	//Sign in/up with official account
 	router.HandleFunc("/sign-in", s.SignIn).Methods("POST")
 	router.HandleFunc("/sign-up", s.SignUp).Methods("POST")
+
+	//Sign in/up with google account
 	router.HandleFunc("/auth/google/login", s.OauthGoogleLogin).Methods("GET")
 	router.HandleFunc("/auth/google/callback", s.OauthGoogleCallBack).Methods("GET")
+
+	//Sheet routes
+	router.HandleFunc("/sheet", s.CreateSheet).Methods("POST")
+
 	router.HandleFunc("/ws", s.HandleWebSocket).Methods("GET")
 	return router
 }

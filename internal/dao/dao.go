@@ -44,7 +44,9 @@ func NewDAO(conf Config) *DAO {
 	}
 
 	userImpl := &UserImpl{client: db}
+	sheetImpl := &SheetImpl{client: db}
 	return &DAO{
-		UserDAO: userImpl,
+		UserDAO:  userImpl,
+		SheetDAO: sheetImpl,
 	}
 }

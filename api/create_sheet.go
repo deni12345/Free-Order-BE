@@ -8,17 +8,18 @@ import (
 	"net/http"
 )
 
-func (s Server) SignUp(w http.ResponseWriter, r *http.Request) {
-	req := &models.User{}
+func (s Server) CreateSheet(w http.ResponseWriter, r *http.Request) {
+	req := &models.Sheet{}
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		fmt.Printf("[API] SignIn on err: %s \n", err)
+		fmt.Println("acc")
 		BadRequest(w, err)
 		return
 	}
 
-	resp, err := s.logic.SignUp(req)
+	resp, err := s.logic.CreateSheet(r.Context(), req)
 	if err != nil {
-		fmt.Printf("[API] SignIn on err: %s \n", err)
+		fmt.Printf("[API] CreateSheet on err: %s \n", err)
 		InternalError(w, err)
 		return
 	}

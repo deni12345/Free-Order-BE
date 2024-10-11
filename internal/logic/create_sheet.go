@@ -13,9 +13,9 @@ func (l *LogicImpl) CreateSheet(ctx context.Context, req *models.Sheet) (*models
 		return nil, fmt.Errorf("[Logic] BuilDomainSheet on err nil domain")
 	}
 
-	err = l.Client.UserDAO.Create(domainUser)
+	err := l.Client.SheetDAO.Create(domainSheet)
 	if err != nil {
-		log.Printf("[Logic] SignUp on err: %v", err)
+		log.Printf("[Logic] Create sheet on err: %v", err)
 		return nil, err
 	}
 	return &models.Sheet{}, nil

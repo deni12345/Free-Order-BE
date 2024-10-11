@@ -1,6 +1,8 @@
 package domain
 
-import "time"
+import (
+	"time"
+)
 
 const (
 	SheetTable = "Sheet"
@@ -9,13 +11,13 @@ const (
 type Sheets []*Sheet
 
 type Sheet struct {
-	ID       *uint      `gorm:"column:Id;"`
-	Name     string     `gorm:"column:SheetName;"`
-	CreateAt *time.Time `gorm:"column:CreateAt;"`
-	UserId   *uint      `gorm:"column:UserId;"`
-	User     *User      `gorm:"foreignKey:UserId;references:Id"`
-	Orders   Orders     `gorm:"foreignKey:OrderId;references:Id"`
-	IsActive bool       `gorm:"column:IsActive;"`
+	ID       *uint     `gorm:"column:Id;"`
+	Name     string    `gorm:"column:Name;"`
+	UserId   *uint     `gorm:"column:UserId;"`
+	User     *User     `gorm:"foreignKey:UserId;references:Id"`
+	Orders   Orders    `gorm:"foreignKey:SheetId;references:Id"`
+	IsActive bool      `gorm:"column:IsActive;"`
+	CreateAt time.Time `gorm:"column:CreateAt;"`
 }
 
 func (Sheet) TableName() string {

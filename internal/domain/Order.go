@@ -10,7 +10,7 @@ type Orders []*Order
 
 type Order struct {
 	ID       *uint     `gorm:"column:Id;"`
-	SheetId  *uint     `gorm:"foreignKey:SheetId;references:Id"`
+	SheetId  *uint     `gorm:"column:SheetId;"`
 	UserId   *uint     `gorm:"foreignKey:UserId;references:Id"`
 	FoodName string    `gorm:"column:FoodName;"`
 	Amount   uint      `gorm:"column:Amount;"`

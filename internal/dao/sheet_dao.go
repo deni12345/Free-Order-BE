@@ -8,28 +8,28 @@ import (
 )
 
 type ISheetDAO interface {
-	Create(*d.User) error
-	Find(*d.User) (*d.User, error)
+	Create(*d.Sheet) error
+	//Find(*d.Sheet) (d.Sheets, error)
 }
 
 type SheetImpl struct {
 	client *gorm.DB
 }
 
-func (dao *SheetImpl) Create(user *d.User) error {
-	tx := dao.client.Create(user)
+func (dao *SheetImpl) Create(sheet *d.Sheet) error {
+	tx := dao.client.Create(sheet)
 	if tx.Error != nil {
 		return fmt.Errorf("internal error: %s", tx.Error)
 	}
 	return nil
 }
 
-func (dao *SheetImpl) Find(req *d.User) (*d.User, error) {
+func (dao *SheetImpl) Find(req *d.Sheet) (*d.User, error) {
 	var result *d.User
 	tx := dao.client.
 		Table(d.UserTable).
-		Where("UserName = ?", req.UserName).
-		Preload("UserInfo").
+		Where("Name = ?", req.Name).
+		Preload("User", "Orders").
 		Find(&result)
 	if tx.Error != nil {
 		return nil, fmt.Errorf("internal error: %s", tx.Error)

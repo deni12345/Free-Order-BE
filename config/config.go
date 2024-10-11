@@ -9,6 +9,7 @@ import (
 
 var (
 	Value = configValue{
+		SecretKey: []byte("nones"),
 		DB: struct {
 			DBName   string "yaml:\"db_name\""
 			UserName string "yaml:\"user_name\""

@@ -27,7 +27,7 @@ jobs:
           go-version: "1.18"
 
       - name: Install
-        run: make install
+        run: make tidy
 
       # - name: Run test
       #   run: make test

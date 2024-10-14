@@ -3,7 +3,8 @@ package middleware
 import (
 	"context"
 	"fmt"
-	"github/lambda-microservice/internal/auth"
+	"github/free-order-be/internal/auth"
+
 	"net/http"
 	"strings"
 

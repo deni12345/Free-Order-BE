@@ -1,8 +1,9 @@
 package api
 
 import (
-	. "github/lambda-microservice/api/middleware"
-	"github/lambda-microservice/internal/logic"
+	. "github/free-order-be/api/middleware"
+	"github/free-order-be/internal/logic"
+
 	"net/http"
 	"strings"
 
@@ -44,8 +45,8 @@ func (s *Server) publicAPI() http.Handler {
 	router.HandleFunc("/sign-up", s.SignUp).Methods("POST")
 
 	//Sign in/up with google account
-	router.HandleFunc("/auth/google/login", s.OauthGoogleLogin).Methods("GET")
-	router.HandleFunc("/auth/google/callback", s.OauthGoogleCallBack).Methods("GET")
+	router.HandleFunc("/auth/google/login", s.GoogleSignIn).Methods("GET")
+	router.HandleFunc("/auth/google/callback", s.GoogleCallBack).Methods("GET")
 
 	//Sheet routes
 	router.HandleFunc("/sheet", s.CreateSheet).Methods("POST")

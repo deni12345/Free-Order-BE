@@ -2,8 +2,9 @@ package logic
 
 import (
 	"fmt"
-	"github/lambda-microservice/internal/domain"
-	"github/lambda-microservice/models"
+
+	"github/free-order-be/internal/domain"
+	"github/free-order-be/models"
 	"log"
 )
 

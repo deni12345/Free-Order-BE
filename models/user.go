@@ -1,8 +1,6 @@
 package models
 
-import (
-	"github/lambda-microservice/internal/domain"
-)
+import "github/free-order-be/internal/domain"
 
 type User struct {
 	UserName string `json:"user_name"`

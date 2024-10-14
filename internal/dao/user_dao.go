@@ -2,7 +2,7 @@ package dao
 
 import (
 	"fmt"
-	d "github/lambda-microservice/internal/domain"
+	d "github/free-order-be/internal/domain"
 
 	"gorm.io/gorm"
 )

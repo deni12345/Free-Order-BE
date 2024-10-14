@@ -2,8 +2,8 @@ package logic
 
 import (
 	"context"
-	"github/lambda-microservice/internal/dao"
-	"github/lambda-microservice/models"
+	"github/free-order-be/internal/dao"
+	"github/free-order-be/models"
 )
 
 type Logic interface {

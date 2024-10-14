@@ -2,8 +2,9 @@ package auth
 
 import (
 	"fmt"
-	"github/lambda-microservice/config"
-	"github/lambda-microservice/internal/domain"
+	"github/free-order-be/config"
+	"github/free-order-be/internal/domain"
+
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"

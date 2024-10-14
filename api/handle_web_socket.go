@@ -2,7 +2,7 @@ package api
 
 import (
 	"fmt"
-	. "github/lambda-microservice/api/middleware"
+	. "github/free-order-be/api/middleware"
 	"net/http"
 
 	"github.com/gorilla/websocket"

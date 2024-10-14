@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 	"fmt"
-	"github/lambda-microservice/internal/auth"
-	"github/lambda-microservice/models"
+	"github/free-order-be/internal/auth"
+	"github/free-order-be/models"
 )
 
 func (l *LogicImpl) SignIn(ctx context.Context, req *models.User) (*models.SignInResp, error) {

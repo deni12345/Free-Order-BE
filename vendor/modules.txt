@@ -1,6 +1,12 @@
 # cloud.google.com/go/compute/metadata v0.3.0
 ## explicit; go 1.19
 cloud.google.com/go/compute/metadata
+# github.com/aws/aws-lambda-go v1.47.0
+## explicit; go 1.18
+github.com/aws/aws-lambda-go/lambda
+github.com/aws/aws-lambda-go/lambda/handlertrace
+github.com/aws/aws-lambda-go/lambda/messages
+github.com/aws/aws-lambda-go/lambdacontext
 # github.com/go-sql-driver/mysql v1.7.0
 ## explicit; go 1.13
 github.com/go-sql-driver/mysql
@@ -26,7 +32,7 @@ github.com/sirupsen/logrus
 ## explicit; go 1.18
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
-# golang.org/x/oauth2 v0.21.0
+# golang.org/x/oauth2 v0.23.0
 ## explicit; go 1.18
 golang.org/x/oauth2
 golang.org/x/oauth2/authhandler

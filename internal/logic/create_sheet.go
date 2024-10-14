@@ -3,7 +3,8 @@ package logic
 import (
 	"context"
 	"fmt"
-	"github/lambda-microservice/models"
+	"github/free-order-be/models"
+
 	"log"
 )
 

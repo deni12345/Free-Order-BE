@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github/lambda-microservice/internal/domain"
+	"github/free-order-be/internal/domain"
 	"time"
 )
 

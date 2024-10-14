@@ -2,7 +2,8 @@ package dao
 
 import (
 	"fmt"
-	"github/lambda-microservice/custom"
+	"github/free-order-be/custom"
+
 	"log"
 
 	"github.com/sirupsen/logrus"

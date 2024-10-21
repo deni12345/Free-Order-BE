@@ -3,6 +3,7 @@ module github/free-order-be
 go 1.18
 
 require (
+	github.com/awslabs/aws-lambda-go-api-proxy v0.16.2
 	github.com/gorilla/websocket v1.5.3
 	golang.org/x/oauth2 v0.23.0
 	gorm.io/driver/mysql v1.5.6

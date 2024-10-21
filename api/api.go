@@ -22,8 +22,8 @@ type Server struct {
 
 func NewServer() *Server {
 	s := &Server{
-		Router:   mux.NewRouter(),
-		logic:    logic.NewLogicImpl(),
+		Router: mux.NewRouter(),
+		//logic:    logic.NewLogicImpl(),
 		upgrader: configWebSocketUpgrader(),
 	}
 
@@ -38,20 +38,22 @@ func NewServer() *Server {
 
 func (s *Server) publicAPI() http.Handler {
 	router := mux.NewRouter()
-	router.Path("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
+	router.Path("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello"))
+	}).Methods("GET")
 
-	//Sign in/up with official account
-	router.HandleFunc("/sign-in", s.SignIn).Methods("POST")
-	router.HandleFunc("/sign-up", s.SignUp).Methods("POST")
+	// //Sign in/up with official account
+	// router.HandleFunc("/sign-in", s.SignIn).Methods("POST")
+	// router.HandleFunc("/sign-up", s.SignUp).Methods("POST")
 
-	//Sign in/up with google account
-	router.HandleFunc("/auth/google/login", s.GoogleSignIn).Methods("GET")
-	router.HandleFunc("/auth/google/callback", s.GoogleCallBack).Methods("GET")
+	// //Sign in/up with google account
+	// router.HandleFunc("/auth/google/login", s.GoogleSignIn).Methods("GET")
+	// router.HandleFunc("/auth/google/callback", s.GoogleCallBack).Methods("GET")
 
-	//Sheet routes
-	router.HandleFunc("/sheet", s.CreateSheet).Methods("POST")
+	// //Sheet routes
+	// router.HandleFunc("/sheet", s.CreateSheet).Methods("POST")
 
-	router.HandleFunc("/ws", s.HandleWebSocket).Methods("GET")
+	// router.HandleFunc("/ws", s.HandleWebSocket).Methods("GET")
 	return router
 }
 

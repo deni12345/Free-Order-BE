@@ -19,14 +19,7 @@ type LogicImpl struct {
 	Client    *dao.DAO
 }
 
-func NewLogicImpl() *LogicImpl {
-	dao := dao.NewDAO(dao.Config{
-		Port:     "3306",
-		Host:     "localhost",
-		User:     "root",
-		Password: "password",
-		DBName:   "fodb",
-	})
+func NewLogicImpl(dao *dao.DAO) *LogicImpl {
 	return &LogicImpl{
 		Client:    dao,
 		SecretKey: []byte("Idasdasdasdnasdnjknxzm1323"),

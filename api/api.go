@@ -2,6 +2,7 @@ package api
 
 import (
 	. "github/free-order-be/api/middleware"
+	"github/free-order-be/internal/dao"
 	"github/free-order-be/internal/logic"
 
 	"net/http"
@@ -20,10 +21,10 @@ type Server struct {
 	connsMap    map[*websocket.Conn]bool
 }
 
-func NewServer() *Server {
+func NewServer(daoInst *dao.DAO) *Server {
 	s := &Server{
-		Router: mux.NewRouter(),
-		//logic:    logic.NewLogicImpl(),
+		Router:   mux.NewRouter(),
+		logic:    logic.NewLogicImpl(daoInst),
 		upgrader: configWebSocketUpgrader(),
 	}
 

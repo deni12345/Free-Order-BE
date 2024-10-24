@@ -1,38 +1,41 @@
 package dao
 
 import (
-	"fmt"
+	"context"
 	d "github/free-order-be/internal/domain"
 
-	"gorm.io/gorm"
+	"github.com/guregu/dynamo/v2"
 )
 
+const UserTable = "user"
+
 type IUserDAO interface {
-	Create(*d.User) error
-	Find(*d.User) (*d.User, error)
+	Create(context.Context, *d.User) error
 }
 
 type UserImpl struct {
-	client *gorm.DB
+	client *dynamo.DB
+	table  dynamo.Table
 }
 
-func (dao *UserImpl) Create(user *d.User) error {
-	tx := dao.client.Create(user)
-	if tx.Error != nil {
-		return fmt.Errorf("internal error: %s", tx.Error)
-	}
-	return nil
+func (u *UserImpl) TableName() string {
+	return u.table.Name()
 }
 
-func (dao *UserImpl) Find(req *d.User) (*d.User, error) {
-	var result *d.User
-	tx := dao.client.
-		Table(d.UserTable).
-		Where("UserName = ?", req.UserName).
-		Preload("UserInfo").
-		Find(&result)
-	if tx.Error != nil {
-		return nil, fmt.Errorf("internal error: %s", tx.Error)
-	}
-	return result.CheckNil(), nil
+func (u *UserImpl) Create(ctx context.Context, user *d.User) error {
+	putRequest := u.table.Put(user)
+	return putRequest.Run(ctx)
 }
+
+// func (u *UserImpl) Find(req *d.User) (*d.User, error) {
+// 	var result *d.User
+// 	tx := dao.client.
+// 		Table(d.UserTable).
+// 		Where("UserName = ?", req.UserName).
+// 		Preload("UserInfo").
+// 		Find(&result)
+// 	if tx.Error != nil {
+// 		return nil, fmt.Errorf("internal error: %s", tx.Error)
+// 	}
+// 	return result.CheckNil(), nil
+// }

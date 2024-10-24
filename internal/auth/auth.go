@@ -17,7 +17,7 @@ func CreateToken(user *domain.User) (string, error) {
 			"userId": user.ID,
 			"exp":    time.Now().Add(24 * time.Hour).Unix(),
 		})
-	tokenStr, err := token.SignedString(config.Value.SecretKey)
+	tokenStr, err := token.SignedString(config.Values.SecretKey)
 	if err != nil {
 		return "", err
 	}
@@ -26,7 +26,7 @@ func CreateToken(user *domain.User) (string, error) {
 
 func VerifyToken(tokenStr string, claim *jwt.MapClaims) error {
 	token, err := jwt.ParseWithClaims(tokenStr, claim, func(t *jwt.Token) (interface{}, error) {
-		return config.Value.SecretKey, nil
+		return config.Values.SecretKey, nil
 	})
 	if err != nil {
 		return err

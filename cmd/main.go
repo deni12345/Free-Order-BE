@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"github/free-order-be/api"
+	"github/free-order-be/config"
 	"github/free-order-be/custom"
+	"github/free-order-be/internal/dao"
 	"net/http"
 	"os"
 
@@ -16,10 +18,12 @@ import (
 var muxLambda *muxadapter.GorillaMuxAdapterV2
 
 func main() {
-	server := api.NewServer()
 	custom.PrintLogo()
+	conn := config.Values.ConnectDB(context.Background())
+	daoInst := dao.NewDAO(conn)
+	server := api.NewServer(daoInst)
 
-	if os.Getenv("RUN_ENV") == "lambda" || os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "" {
+	if os.Getenv("RUN_ENV") == "Dev" || os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "" {
 		logrus.Info("run server in lambda mode [:8080]")
 
 		muxLambda = muxadapter.NewV2(server.Router)

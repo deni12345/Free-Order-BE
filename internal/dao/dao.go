@@ -1,53 +1,19 @@
 package dao
 
 import (
-	"fmt"
-	"github/free-order-be/custom"
-
-	"log"
-
-	"github.com/sirupsen/logrus"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+	"github.com/guregu/dynamo/v2"
 )
-
-const (
-	DNS = `%s:%s@tcp(%s:%s)/%s?parseTime=true&loc=Local`
-)
-
-type Config struct {
-	Host     string
-	Port     string
-	DBName   string
-	User     string
-	Password string
-	Option   map[string]string
-}
 
 type DAO struct {
-	SheetDAO ISheetDAO
-	UserDAO  IUserDAO
+	UserDAO IUserDAO
 }
 
-func NewDAO(conf Config) *DAO {
-	logger := custom.NewGormLogrus().SetLevel(logrus.InfoLevel)
-	db, err := gorm.Open(mysql.Open(fmt.Sprintf(
-		DNS,
-		conf.User,
-		conf.Password,
-		conf.Host,
-		conf.Port,
-		conf.DBName,
-	)), &gorm.Config{Logger: logger})
-	if err != nil {
-		log.Fatalf("Can not connect db on error: %s", err)
-		return nil
-	}
+func NewDAO(db *dynamo.DB) *DAO {
 
-	userImpl := &UserImpl{client: db}
-	sheetImpl := &SheetImpl{client: db}
 	return &DAO{
-		UserDAO:  userImpl,
-		SheetDAO: sheetImpl,
+		UserDAO: &UserImpl{
+			client: db,
+			table:  db.Table(UserTable),
+		},
 	}
 }

@@ -19,13 +19,18 @@ var muxLambda *muxadapter.GorillaMuxAdapterV2
 
 func main() {
 	custom.PrintLogo()
+	config.LoadConfig()
 	conn := config.Values.ConnectDB(context.Background())
+	tables, err := conn.ListTables().All(context.Background())
+	if err != nil {
+		logrus.Infof("list table on database %v", tables)
+	}
+
 	daoInst := dao.NewDAO(conn)
 	server := api.NewServer(daoInst)
 
-	if os.Getenv("RUN_ENV") == "Dev" || os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "" {
+	if os.Getenv("RUN_ENV") == config.DEV || os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "" {
 		logrus.Info("run server in lambda mode [:8080]")
-
 		muxLambda = muxadapter.NewV2(server.Router)
 		lambda.Start(Handler)
 		return

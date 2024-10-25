@@ -9,7 +9,6 @@ type DAO struct {
 }
 
 func NewDAO(db *dynamo.DB) *DAO {
-
 	return &DAO{
 		UserDAO: &UserImpl{
 			client: db,

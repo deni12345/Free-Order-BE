@@ -17,7 +17,7 @@ func (cfg *configValue) ResolveEndpoint(ctx context.Context, params dynamodb.End
 		endpoint *url.URL
 		err      error
 	)
-	if cfg.Env == Local {
+	if cfg.Env == LOCAL {
 		endpoint, err = url.Parse("http://localhost:8000")
 		if err != nil {
 			return smithyendpoints.Endpoint{}, err

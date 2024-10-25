@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	Local                  = "local"
-	UnspecifiedEnvironment = ""
+	DEV          = "dev"
+	LOCAL        = "local"
+	UNDEFINE_ENV = ""
 )
 
 var (
@@ -35,8 +36,8 @@ type configValue struct {
 
 func LoadConfig() {
 	Environment := os.Getenv("RUN_ENV")
-	if Environment == UnspecifiedEnvironment {
-		Environment = Local
+	if Environment == UNDEFINE_ENV {
+		Environment = LOCAL
 	}
 	Values = loadConfigValues(Environment)
 
@@ -51,13 +52,13 @@ func loadConfigValues(env string) *configValue {
 		return nil
 	}
 
-	err = envconfig.Process("", &values)
+	err = envconfig.Process("", values)
 	if err != nil {
 		logrus.Fatalf("error process envconfig value for %s: %v", env, err)
 		return nil
 	}
 
-	err = yaml.Unmarshal(content, &values)
+	err = yaml.Unmarshal(content, values)
 	if err != nil {
 		logrus.Fatalf("error umarshal yaml config file for %s: %v", env, err)
 		return nil

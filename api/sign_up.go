@@ -16,7 +16,7 @@ func (s Server) SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := s.logic.SignUp(req)
+	resp, err := s.logic.SignUp(r.Context(), req)
 	if err != nil {
 		fmt.Printf("[API] SignIn on err: %s \n", err)
 		InternalError(w, err)

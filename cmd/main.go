@@ -15,16 +15,21 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var muxLambda *muxadapter.GorillaMuxAdapterV2
+var (
+	daoInst   *dao.DAO
+	muxLambda *muxadapter.GorillaMuxAdapterV2
+)
 
-func main() {
-	custom.PrintLogo()
+func init() {
 	config.LoadConfig()
 	conn := config.Values.ConnectDB(context.Background())
 	tables, _ := conn.ListTables().All(context.Background())
 	logrus.Infof("list table on database %v", tables)
+	daoInst = dao.NewDAO(conn)
+}
 
-	daoInst := dao.NewDAO(conn)
+func main() {
+	custom.PrintLogo()
 	server := api.NewServer(daoInst)
 
 	if os.Getenv("RUN_ENV") == config.DEV || os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "" {

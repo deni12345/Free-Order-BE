@@ -20,12 +20,12 @@ func (cfg *configValue) ResolveEndpoint(ctx context.Context, params dynamodb.End
 		err      error
 	)
 	if cfg.Env == LOCAL {
-		endpoint, err = url.Parse("http://localhost:8000")
+		endpoint, err = url.Parse(cfg.DynamodbEndpoint)
 		if err != nil {
 			return smithyendpoints.Endpoint{}, err
 		}
 	} else {
-		endpoint, err = url.Parse(fmt.Sprintf("https://stg.dynamodb.%s.amazonaws.com", *params.Region))
+		endpoint, err = url.Parse(fmt.Sprintf("https://stg.dynamodb.%s.amazonaws.com", cfg.DB.Region))
 		if err != nil {
 			return smithyendpoints.Endpoint{}, err
 		}

@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"github/free-order-be/api"
+	custom "github/free-order-be/banner"
 	"github/free-order-be/config"
-	"github/free-order-be/custom"
 	"github/free-order-be/internal/dao"
 	"net/http"
 	"os"
@@ -21,10 +21,8 @@ func main() {
 	custom.PrintLogo()
 	config.LoadConfig()
 	conn := config.Values.ConnectDB(context.Background())
-	tables, err := conn.ListTables().All(context.Background())
-	if err != nil {
-		logrus.Infof("list table on database %v", tables)
-	}
+	tables, _ := conn.ListTables().All(context.Background())
+	logrus.Infof("list table on database %v", tables)
 
 	daoInst := dao.NewDAO(conn)
 	server := api.NewServer(daoInst)

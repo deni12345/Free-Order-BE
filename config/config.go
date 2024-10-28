@@ -16,9 +16,7 @@ const (
 )
 
 var (
-	Values = &configValue{
-		SecretKey: []byte("nones"),
-	}
+	Values = &configValue{}
 )
 
 type database struct {
@@ -27,7 +25,7 @@ type database struct {
 
 type configValue struct {
 	Env                string
-	SecretKey          []byte   `yaml:"secret_key" envconfig:"SECRET_KEY"`
+	SecretKey          string   `yaml:"secret_key" envconfig:"SECRET_KEY"`
 	GoogleClientID     string   `yaml:"google_client_id" envconfig:"GOOGLE_CLIENT_ID"`
 	GoogleClientSecret string   `yaml:"google_client_secret" envconfig:"GOOGLE_CLIENT_SECRET"`
 	DynamodbEndpoint   string   `yaml:"dynamodb_endpoint" envconfig:"DYNAMODB_ENDPOINT"`

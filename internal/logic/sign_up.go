@@ -14,10 +14,14 @@ func (l *LogicImpl) SignUp(ctx context.Context, req *models.User) (*models.User,
 	if ctxUser == nil {
 		return nil, fmt.Errorf("[Logic] cannot parse model user")
 	}
-	err := l.CheckExistedUser(ctx, ctxUser)
+	users, err := l.Client.UserDAO.FindByEmail(ctx, ctxUser.GetEmail())
 	if err != nil {
 		return nil, err
 	}
+	if len(users) > 0 {
+		return nil, fmt.Errorf("email %v already exist", ctxUser.GetEmail())
+	}
+
 	err = l.Client.UserDAO.Create(ctx, ctxUser)
 	if err != nil {
 		log.Printf("[Logic] SignUp on err: %v", err)
@@ -25,16 +29,4 @@ func (l *LogicImpl) SignUp(ctx context.Context, req *models.User) (*models.User,
 	}
 
 	return ctxUser.GetModelUser(), nil
-}
-
-func (l *LogicImpl) CheckExistedUser(ctx context.Context, req *d.User) error {
-	dbUser, err := l.Client.UserDAO.FindByEmail(ctx, req.GetEmail())
-	if err != nil {
-		log.Printf("[Logic] find user on err: %v", err)
-		return err
-	}
-	if len(dbUser) >= 1 {
-		return fmt.Errorf("[Logic] user already existed")
-	}
-	return nil
 }

@@ -14,14 +14,14 @@ type User struct {
 }
 
 type GetUserReq struct {
-	UserEmail string `json:"user_email"`
+	UserID uint `json:"user_id"`
 }
 
-func (r *GetUserReq) GetUserEmail() string {
+func (r *GetUserReq) GetUserID() uint {
 	if r != nil {
-		return r.UserEmail
+		return r.UserID
 	}
-	return ""
+	return 0
 }
 
 type SignInResp struct {

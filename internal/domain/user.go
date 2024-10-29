@@ -6,6 +6,7 @@ import (
 )
 
 type Users []*User
+
 type User struct {
 	ID           *uint     `dynamo:"Id,hash"`
 	UserName     string    `dynamo:"Name,range"`

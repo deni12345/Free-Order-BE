@@ -38,7 +38,6 @@ func LoadConfig() {
 		Environment = LOCAL
 	}
 	Values = loadConfigValues(Environment)
-
 }
 
 func loadConfigValues(env string) *configValue {

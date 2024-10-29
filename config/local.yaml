@@ -1,4 +1,4 @@
 secret_key: mysecretkeyhahahaha
 google_client_id:
 google_client_secret:
-dynamodb_endpoint: http://localhost:8000
+dynamodb_endpoint: http://localhost:8800

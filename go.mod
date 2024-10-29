@@ -10,7 +10,6 @@ require (
 	github.com/gorilla/websocket v1.5.3
 	github.com/kelseyhightower/envconfig v1.4.0
 	golang.org/x/oauth2 v0.23.0
-	gorm.io/gorm v1.25.9
 )
 
 require (
@@ -40,6 +39,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/gorilla/mux v1.8.1
 	github.com/guregu/dynamo/v2 v2.2.1
+	github.com/joho/godotenv v1.5.1
 	github.com/sirupsen/logrus v1.9.3
 	golang.org/x/crypto v0.22.0
 	gopkg.in/yaml.v2 v2.4.0

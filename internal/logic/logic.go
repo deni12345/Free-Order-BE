@@ -11,7 +11,7 @@ type Logic interface {
 	SignUp(context.Context, *models.User) (*models.User, error)
 	// SignIn(context.Context, *models.User) (*models.SignInResp, error)
 
-	// CreateSheet(context.Context, *models.Sheet) (*models.Sheet, error)
+	CreateSheet(context.Context, *models.Sheet) (*models.Sheet, error)
 	// UpdateSheet(context.Context, *models.Sheet) error
 	//RemoveSheet(context.Context, *models.Sheet) error
 }

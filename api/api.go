@@ -49,8 +49,8 @@ func (s *Server) publicAPI() http.Handler {
 	// router.HandleFunc("/auth/google/login", s.GoogleSignIn).Methods("GET")
 	// router.HandleFunc("/auth/google/callback", s.GoogleCallBack).Methods("GET")
 
-	// //Sheet routes
-	// router.HandleFunc("/sheet", s.CreateSheet).Methods("POST")
+	//Sheet routes
+	router.HandleFunc("/sheet", s.CreateSheet).Methods("POST")
 
 	// router.HandleFunc("/ws", s.HandleWebSocket).Methods("GET")
 	return router

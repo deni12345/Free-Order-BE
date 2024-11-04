@@ -1,38 +1,39 @@
 package dao
 
-// import (
-// 	"fmt"
-// 	d "github/free-order-be/internal/domain"
+import (
+	"context"
+	"fmt"
+	d "github/free-order-be/internal/domain"
 
-// 	"github.com/guregu/dynamo/v2"
-// )
+	"github.com/guregu/dynamo/v2"
+)
 
-// type ISheetDAO interface {
-// 	Create(*d.Sheet) error
-// 	//Find(*d.Sheet) (d.Sheets, error)
-// }
+type ISheetDAO interface {
+	CreateInfo(context.Context, *d.Sheet) error
+	Find(context.Context, string) (d.Sheets, error)
+}
 
-// type SheetImpl struct {
-// 	client *dynamo.DB
-// }
+type SheetImpl struct {
+	dao   *DAO
+	table dynamo.Table
+}
 
-// func (dao *SheetImpl) Create(sheet *d.Sheet) error {
-// 	tx := dao.client.Create(sheet)
-// 	if tx.Error != nil {
-// 		return fmt.Errorf("internal error: %s", tx.Error)
-// 	}
-// 	return nil
-// }
+func (s *SheetImpl) CreateInfo(ctx context.Context, sheet *d.Sheet) error {
+	newID, err := s.dao.NextID(ctx, SHEET_TABLE)
+	if err != nil {
+		return err
+	}
 
-// func (dao *SheetImpl) Find(req *d.Sheet) (*d.User, error) {
-// 	var result *d.User
-// 	tx := dao.client.
-// 		Table(d.UserTable).
-// 		Where("Name = ?", req.Name).
-// 		Preload("User", "Orders").
-// 		Find(&result)
-// 	if tx.Error != nil {
-// 		return nil, fmt.Errorf("internal error: %s", tx.Error)
-// 	}
-// 	return result.CheckNil(), nil
-// }
+	sheet.PK = fmt.Sprintf("SHEET#%v", *newID)
+	sheet.SK = "INFO#METADATA"
+	return s.table.Put(sheet).Run(ctx)
+}
+
+func (s *SheetImpl) Find(ctx context.Context, name string) (d.Sheets, error) {
+	var results = d.Sheets{}
+	err := s.table.Scan().Filter("'Name'=?", name).All(ctx, &results)
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
+}

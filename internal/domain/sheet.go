@@ -12,21 +12,21 @@ const (
 type Sheets []*Sheet
 
 type Sheet struct {
-	ID          *uint     `dynamo:"Id,hash"`
+	PK          string    `dynamo:"PK,hash"`
+	SK          string    `dynamo:"SK,range"`
 	Name        string    `dynamo:"Name"`
-	CoffeeBrand string    `dynamo:"CoffeeBrand"`
+	Brand       string    `dynamo:"Brand"`
 	MenuURL     string    `dynamo:"MenuURL"`
-	CoopHost    []string  `dynamo:"CoopHost"`
-	HostUserID  uint      `dynamo:"HostUserId"`
+	HostIDs     string    `dynamo:"HostUserId"`
 	IsActive    bool      `dynamo:"IsActive"`
 	CreateDatim time.Time `dynamo:"CreateDatim"`
 }
 
-func (s *Sheet) GetID() *uint {
+func (s *Sheet) GetID() string {
 	if s != nil {
-		return s.ID
+		return s.PK
 	}
-	return nil
+	return ""
 }
 
 func (s *Sheet) GetName() string {
@@ -38,7 +38,7 @@ func (s *Sheet) GetName() string {
 
 func (s *Sheet) GetCoffeeBrand() string {
 	if s != nil {
-		return s.CoffeeBrand
+		return s.Brand
 	}
 	return ""
 }
@@ -50,18 +50,11 @@ func (s *Sheet) GetMenuURL() string {
 	return ""
 }
 
-func (s *Sheet) GetCoopHost() []string {
+func (s *Sheet) GetHostIDs() string {
 	if s != nil {
-		return s.CoopHost
+		return s.HostIDs
 	}
-	return nil
-}
-
-func (s *Sheet) GetHostUserID() uint {
-	if s != nil {
-		return s.HostUserID
-	}
-	return 0
+	return ""
 }
 
 func (s *Sheet) GetIsActive() bool {
@@ -72,7 +65,7 @@ func (s *Sheet) GetIsActive() bool {
 }
 
 func (s *Sheet) CheckNil() *Sheet {
-	if s.ID != nil {
+	if s.PK != "" {
 		return s
 	}
 	return nil
@@ -80,12 +73,27 @@ func (s *Sheet) CheckNil() *Sheet {
 
 func (s *Sheet) GetModelSheet() *models.Sheet {
 	return &models.Sheet{
-		ID:          s.GetID(),
-		Name:        s.GetName(),
-		CoffeeBrand: "",
-		MenuURL:     "",
-		CoopHost:    []string{},
-		HostUserID:  0,
-		IsActive:    false,
+		ID:       s.GetID(),
+		Name:     s.GetName(),
+		Brand:    s.GetCoffeeBrand(),
+		MenuURL:  s.GetMenuURL(),
+		HostIDs:  s.GetHostIDs(),
+		IsActive: s.GetIsActive(),
+	}
+}
+
+func BuildDomainSheet(v *models.Sheet) *Sheet {
+	if v == nil {
+		return nil
+	}
+	return &Sheet{
+		PK:          v.ID,
+		SK:          "",
+		Name:        v.Name,
+		Brand:       v.Brand,
+		MenuURL:     v.MenuURL,
+		HostIDs:     v.HostIDs,
+		IsActive:    v.IsActive,
+		CreateDatim: time.Now().UTC(),
 	}
 }

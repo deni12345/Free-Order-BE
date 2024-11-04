@@ -14,11 +14,13 @@ import (
 const (
 	COUNTER_TABLE = "Counter"
 	USER_TABLE    = "User"
+	SHEET_TABLE   = "Sheet"
 )
 
 type DAO struct {
-	client  *dynamo.DB
-	UserDAO IUserDAO
+	client   *dynamo.DB
+	UserDAO  IUserDAO
+	SheetDAO ISheetDAO
 }
 
 func NewDAO(db *dynamo.DB) *DAO {
@@ -30,6 +32,10 @@ func NewDAO(db *dynamo.DB) *DAO {
 		UserDAO: &UserImpl{
 			dao:   daoRef,
 			table: db.Table(USER_TABLE),
+		},
+		SheetDAO: &SheetImpl{
+			dao:   daoRef,
+			table: db.Table(SHEET_TABLE),
 		},
 		client: db,
 	}

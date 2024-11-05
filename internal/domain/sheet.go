@@ -64,6 +64,13 @@ func (s *Sheet) GetIsActive() bool {
 	return false
 }
 
+func (s *Sheet) GetSK() string {
+	if s != nil {
+		return s.SK
+	}
+	return ""
+}
+
 func (s *Sheet) CheckNil() *Sheet {
 	if s.PK != "" {
 		return s
@@ -73,7 +80,7 @@ func (s *Sheet) CheckNil() *Sheet {
 
 func (s *Sheet) GetModelSheet() *models.Sheet {
 	return &models.Sheet{
-		ID:       s.GetID(),
+		PK:       s.GetID(),
 		Name:     s.GetName(),
 		Brand:    s.GetCoffeeBrand(),
 		MenuURL:  s.GetMenuURL(),
@@ -86,9 +93,10 @@ func BuildDomainSheet(v *models.Sheet) *Sheet {
 	if v == nil {
 		return nil
 	}
+	SK := "INFO#METADATA"
 	return &Sheet{
-		PK:          v.ID,
-		SK:          "",
+		PK:          v.PK,
+		SK:          SK,
 		Name:        v.Name,
 		Brand:       v.Brand,
 		MenuURL:     v.MenuURL,

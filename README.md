@@ -9,7 +9,7 @@ Free Order Backend created with Go, GorillaMux, Lambda and FireBase
 
 ## General info
 
-Free Order is a web application help you to host happy hour meals in your company, your home or anywhere ( the only thing you need is a device that can connect to internet and internet :penguin: )
+Free Order is a web application help you to host happy hour meals in your company, your home or anywhere ( the only thing you need is a device that can connect to internet and internet :penguin:
 
 ## Setup
 

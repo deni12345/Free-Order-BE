@@ -22,9 +22,16 @@ type Sheet struct {
 	CreateDatim time.Time `dynamo:"CreateDatim"`
 }
 
-func (s *Sheet) GetID() string {
+func (s *Sheet) GetPK() string {
 	if s != nil {
 		return s.PK
+	}
+	return ""
+}
+
+func (s *Sheet) GetSK() string {
+	if s != nil {
+		return s.SK
 	}
 	return ""
 }
@@ -64,13 +71,6 @@ func (s *Sheet) GetIsActive() bool {
 	return false
 }
 
-func (s *Sheet) GetSK() string {
-	if s != nil {
-		return s.SK
-	}
-	return ""
-}
-
 func (s *Sheet) CheckNil() *Sheet {
 	if s.PK != "" {
 		return s
@@ -80,7 +80,7 @@ func (s *Sheet) CheckNil() *Sheet {
 
 func (s *Sheet) GetModelSheet() *models.Sheet {
 	return &models.Sheet{
-		PK:       s.GetID(),
+		PK:       s.GetPK(),
 		Name:     s.GetName(),
 		Brand:    s.GetCoffeeBrand(),
 		MenuURL:  s.GetMenuURL(),
@@ -94,6 +94,7 @@ func BuildDomainSheet(v *models.Sheet) *Sheet {
 		return nil
 	}
 	SK := "INFO#METADATA"
+
 	return &Sheet{
 		PK:          v.PK,
 		SK:          SK,

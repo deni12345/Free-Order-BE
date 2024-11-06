@@ -7,13 +7,16 @@ import (
 )
 
 type Logic interface {
+	//User
 	GetUser(context.Context, *models.GetUserReq) (*models.User, error)
 	SignUp(context.Context, *models.User) (*models.User, error)
 	// SignIn(context.Context, *models.User) (*models.SignInResp, error)
 
+	//Order
+	CreateOrder(context.Context, *models.Order) (*models.Order, error)
+
+	//Sheet
 	CreateSheet(context.Context, *models.Sheet) (*models.Sheet, error)
-	// UpdateSheet(context.Context, *models.Sheet) error
-	//RemoveSheet(context.Context, *models.Sheet) error
 }
 type LogicImpl struct {
 	SecretKey []byte

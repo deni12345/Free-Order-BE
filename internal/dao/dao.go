@@ -15,29 +15,23 @@ const (
 	COUNTER_TABLE = "Counter"
 	USER_TABLE    = "User"
 	SHEET_TABLE   = "Sheet"
+	ORDER_TABLE   = "Order"
+	SHEET_SK      = "INFO#METADATA"
 )
 
 type DAO struct {
 	client   *dynamo.DB
 	UserDAO  IUserDAO
 	SheetDAO ISheetDAO
+	OrderDAO IOrderDAO
 }
 
 func NewDAO(db *dynamo.DB) *DAO {
-	daoRef := &DAO{
-		client: db,
-	}
-
 	return &DAO{
-		UserDAO: &UserImpl{
-			dao:   daoRef,
-			table: db.Table(USER_TABLE),
-		},
-		SheetDAO: &SheetImpl{
-			dao:   daoRef,
-			table: db.Table(SHEET_TABLE),
-		},
-		client: db,
+		UserDAO:  NewUserDAO(db),
+		SheetDAO: NewSheetDAO(db),
+		OrderDAO: NewOrderDAO(db),
+		client:   db,
 	}
 }
 

@@ -13,9 +13,17 @@ type IUserDAO interface {
 	FindByEmail(context.Context, string) (d.Users, error)
 }
 
+func NewUserDAO(client *dynamo.DB) IUserDAO {
+	return &UserImpl{
+		client: client,
+		table:  client.Table(USER_TABLE),
+	}
+}
+
 type UserImpl struct {
-	dao   *DAO
-	table dynamo.Table
+	dao    *DAO
+	client *dynamo.DB
+	table  dynamo.Table
 }
 
 func (u *UserImpl) TableName() string {

@@ -14,7 +14,7 @@ func (l *LogicImpl) CreateSheet(ctx context.Context, req *models.Sheet) (*models
 	if ctxSheet == nil {
 		return nil, fmt.Errorf("[Logic] cannot parse model user")
 	}
-	sheets, err := l.Client.SheetDAO.Find(ctx, ctxSheet.GetName())
+	sheets, err := l.Client.SheetDAO.FindsByName(ctx, ctxSheet.GetName())
 	if err != nil {
 		return nil, err
 	}
@@ -27,5 +27,5 @@ func (l *LogicImpl) CreateSheet(ctx context.Context, req *models.Sheet) (*models
 		log.Printf("[Logic] Create sheet on err: %v", err)
 		return nil, err
 	}
-	return &models.Sheet{}, nil
+	return ctxSheet.GetModelSheet(), nil
 }

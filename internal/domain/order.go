@@ -8,14 +8,14 @@ import (
 type Orders []*Order
 
 type Order struct {
-	PK          string    `dynamo:"PK,hash"`
-	SK          string    `dynamo:"PK,hash"`
-	Name        string    `dynamo:"Name"`
-	UserID      string    `dynamo:"UserID"`
-	Amount      uint      `dynamo:"Amount"`
-	Price       uint      `dynamo:"Price"`
-	IsActive    bool      `dynamo:"IsActive"`
-	CreateDatim time.Time `dynamo:"CreateDatim"`
+	PK       string    `dynamo:"PK,hash"`
+	SK       string    `dynamo:"PK,hash"`
+	Name     string    `dynamo:"Name"`
+	UserID   string    `dynamo:"UserID"`
+	Amount   uint      `dynamo:"Amount"`
+	Price    uint      `dynamo:"Price"`
+	IsActive bool      `dynamo:"IsActive"`
+	CreateAt time.Time `dynamo:"CreateAt"`
 }
 
 func (o *Order) GetPK() string {
@@ -74,24 +74,36 @@ func (o *Order) GetPrice() uint {
 	return 0
 }
 
-func (o *Order) GetCreateDatim() time.Time {
+func (o *Order) GetCreateAt() time.Time {
 	if o != nil {
-		return o.CreateDatim
+		return o.CreateAt
 	}
 	return time.Time{}
 }
 
 func (o *Order) GetModelOrder() *models.Order {
 	return &models.Order{
-		PK:          o.GetPK(),
-		SK:          o.GetSK(),
+		SheetID:     o.GetPK(),
+		OrderID:     o.GetSK(),
 		Name:        o.GetName(),
 		UserID:      o.GetUserID(),
 		Amount:      o.GetAmount(),
 		Price:       o.GetPrice(),
 		IsActive:    o.GetIsActive(),
-		CreateDatim: o.GetCreateDatim(),
+		CreateDatim: o.GetCreateAt(),
 	}
+}
+
+func (os Orders) GetModelOrders() models.Orders {
+	if len(os) == 0 {
+		return nil
+	}
+
+	orders := make(models.Orders, 0, len(os))
+	for _, o := range os {
+		orders = append(orders, o.GetModelOrder())
+	}
+	return orders
 }
 
 func BuildDomainOrder(v *models.Order) *Order {
@@ -100,13 +112,13 @@ func BuildDomainOrder(v *models.Order) *Order {
 	}
 
 	return &Order{
-		PK:          v.PK,
-		SK:          v.SK,
-		Name:        v.Name,
-		UserID:      v.UserID,
-		Amount:      v.Amount,
-		Price:       v.Price,
-		IsActive:    v.IsActive,
-		CreateDatim: time.Now().UTC(),
+		PK:       v.SheetID,
+		SK:       v.OrderID,
+		Name:     v.Name,
+		UserID:   v.UserID,
+		Amount:   v.Amount,
+		Price:    v.Price,
+		IsActive: v.IsActive,
+		CreateAt: time.Now().UTC(),
 	}
 }

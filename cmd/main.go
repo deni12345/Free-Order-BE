@@ -22,10 +22,13 @@ var (
 
 func init() {
 	config.LoadConfig()
+	config.InitLogrus()
+
 	conn := config.Values.ConnectDB(context.Background())
+	daoInst = dao.NewDAO(conn)
+
 	tables, _ := conn.ListTables().All(context.Background())
 	logrus.Infof("list table on database %v", tables)
-	daoInst = dao.NewDAO(conn)
 }
 
 func main() {

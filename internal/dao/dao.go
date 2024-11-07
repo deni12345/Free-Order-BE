@@ -35,6 +35,12 @@ func NewDAO(db *dynamo.DB) *DAO {
 	}
 }
 
+func NewDAORef(db *dynamo.DB) *DAO {
+	return &DAO{
+		client: db,
+	}
+}
+
 func (dao *DAO) NextID(ctx context.Context, table string) (*uint, error) {
 	output, err := dao.client.Client().UpdateItem(ctx, &dynamodb.UpdateItemInput{
 		TableName: aws.String(COUNTER_TABLE),

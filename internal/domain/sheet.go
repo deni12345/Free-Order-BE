@@ -12,14 +12,14 @@ const (
 type Sheets []*Sheet
 
 type Sheet struct {
-	PK          string    `dynamo:"PK,hash"`
-	SK          string    `dynamo:"SK,range"`
-	Name        string    `dynamo:"Name"`
-	Brand       string    `dynamo:"Brand"`
-	MenuURL     string    `dynamo:"MenuURL"`
-	HostIDs     string    `dynamo:"HostUserId"`
-	IsActive    bool      `dynamo:"IsActive"`
-	CreateDatim time.Time `dynamo:"CreateDatim"`
+	PK       string    `dynamo:"PK,hash"`
+	SK       string    `dynamo:"SK,range"`
+	Name     string    `dynamo:"Name"`
+	Brand    string    `dynamo:"Brand"`
+	MenuURL  string    `dynamo:"MenuURL"`
+	HostIDs  string    `dynamo:"HostUserId"`
+	IsActive bool      `dynamo:"IsActive"`
+	CreateAt time.Time `dynamo:"CreateAt"`
 }
 
 func (s *Sheet) GetPK() string {
@@ -80,7 +80,7 @@ func (s *Sheet) CheckNil() *Sheet {
 
 func (s *Sheet) GetModelSheet() *models.Sheet {
 	return &models.Sheet{
-		PK:       s.GetPK(),
+		SheetID:  s.GetPK(),
 		Name:     s.GetName(),
 		Brand:    s.GetCoffeeBrand(),
 		MenuURL:  s.GetMenuURL(),
@@ -93,16 +93,14 @@ func BuildDomainSheet(v *models.Sheet) *Sheet {
 	if v == nil {
 		return nil
 	}
-	SK := "INFO#METADATA"
 
 	return &Sheet{
-		PK:          v.PK,
-		SK:          SK,
-		Name:        v.Name,
-		Brand:       v.Brand,
-		MenuURL:     v.MenuURL,
-		HostIDs:     v.HostIDs,
-		IsActive:    v.IsActive,
-		CreateDatim: time.Now().UTC(),
+		PK:       v.SheetID,
+		Name:     v.Name,
+		Brand:    v.Brand,
+		MenuURL:  v.MenuURL,
+		HostIDs:  v.HostIDs,
+		IsActive: v.IsActive,
+		CreateAt: time.Now().UTC(),
 	}
 }

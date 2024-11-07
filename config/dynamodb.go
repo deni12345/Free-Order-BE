@@ -11,7 +11,7 @@ import (
 	smithyendpoints "github.com/aws/smithy-go/endpoints"
 	"github.com/aws/smithy-go/logging"
 	"github.com/guregu/dynamo/v2"
-	"github.com/sirupsen/logrus"
+	logrus "github.com/sirupsen/logrus"
 )
 
 func (cfg *configValue) ResolveEndpoint(ctx context.Context, params dynamodb.EndpointParameters) (smithyendpoints.Endpoint, error) {
@@ -34,7 +34,7 @@ func (cfg *configValue) ResolveEndpoint(ctx context.Context, params dynamodb.End
 }
 
 func (cfg *configValue) Logf(classification logging.Classification, format string, v ...interface{}) {
-	logrus.Infof(format, v...)
+	logrus.Info(v...)
 }
 
 func (cfg *configValue) ApplyResolveEnpoint(o *dynamodb.Options) {

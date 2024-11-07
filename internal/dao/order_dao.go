@@ -21,8 +21,8 @@ type OrderImpl struct {
 
 func NewOrderDAO(db *dynamo.DB) *OrderImpl {
 	return &OrderImpl{
-		dao:   NewDAO(db),
-		table: db.Table(ORDER_TABLE),
+		dao:   NewDAORef(db),
+		table: db.Table(SHEET_TABLE),
 	}
 }
 
@@ -41,7 +41,7 @@ func (o *OrderImpl) Create(ctx context.Context, order *d.Order) error {
 
 func (o *OrderImpl) FindsBySheet(ctx context.Context, sheetID string) (d.Orders, error) {
 	var orders d.Orders
-	err := o.table.Get("PK", sheetID).Filter("begins_with('SK', 'ORDER#')").All(ctx, &orders)
+	err := o.table.Get("PK", sheetID).Range("SK", dynamo.BeginsWith, "ORDER#").All(ctx, &orders)
 	if err != nil {
 		return nil, err
 	}

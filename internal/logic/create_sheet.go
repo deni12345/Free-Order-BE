@@ -12,7 +12,7 @@ import (
 func (l *LogicImpl) CreateSheet(ctx context.Context, req *models.Sheet) (*models.Sheet, error) {
 	ctxSheet := d.BuildDomainSheet(req)
 	if ctxSheet == nil {
-		return nil, fmt.Errorf("[Logic] cannot parse model user")
+		return nil, fmt.Errorf("[Logic] cannot parse model sheet")
 	}
 	sheets, err := l.Client.SheetDAO.FindsByName(ctx, ctxSheet.GetName())
 	if err != nil {

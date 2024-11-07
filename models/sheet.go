@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Sheet struct {
-	PK          string    `json:"id"`
+	SheetID     string    `json:"sheet_id"`
 	Name        string    `json:"name"`
 	Brand       string    `json:"coffee_brand"`
 	MenuURL     string    `json:"menu_url"`

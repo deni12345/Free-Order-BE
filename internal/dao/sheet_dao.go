@@ -20,7 +20,7 @@ type SheetImpl struct {
 
 func NewSheetDAO(db *dynamo.DB) *SheetImpl {
 	return &SheetImpl{
-		dao:   NewDAO(db),
+		dao:   NewDAORef(db),
 		table: db.Table(SHEET_TABLE),
 	}
 }

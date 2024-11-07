@@ -5,6 +5,7 @@ DATABASE='mysql://root:password@tcp(localhost:3306)/fodb?charset=utf8mb4&parseTi
 
 install:
 	go install github.com/aws/aws-lambda-go/cmd/build-lambda-zip@latest
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
 	
 build: 
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o main ./cmd/main.go
@@ -12,6 +13,9 @@ build:
 zip: 
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o build/main ./cmd/main.go
 	$(GOPATH)\bin\build-lambda-zip.exe -o build/main.zip build/main
+
+lint:
+	golangci-lint run
 
 run:
 	go run ./cmd/$(SAMPLE_BINARY_NAME).go
@@ -24,6 +28,3 @@ migrate:
 
 tidy:
 	go mod tidy && go mod vendor
-
-lint:
-	golangci-lint run

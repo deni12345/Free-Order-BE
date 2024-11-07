@@ -52,6 +52,9 @@ func (s *Server) publicAPI() http.Handler {
 	//Sheet routes
 	router.HandleFunc("/sheet", s.CreateSheet).Methods("POST")
 
+	//Order routes
+	router.HandleFunc("/orders", s.GetOrders).Methods("GET")
+
 	// router.HandleFunc("/ws", s.HandleWebSocket).Methods("GET")
 	return router
 }

@@ -25,3 +25,14 @@ func (req *GetOrdersReq) GetSheetID() string {
 	}
 	return ""
 }
+
+type GetUserOrdersReq struct {
+	UserID string `json:"user_id"`
+}
+
+func (req *GetUserOrdersReq) GetUserID() string {
+	if req != nil {
+		return req.UserID
+	}
+	return ""
+}

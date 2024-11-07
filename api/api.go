@@ -39,7 +39,7 @@ func NewServer(daoInst *dao.DAO) *Server {
 
 func (s *Server) publicAPI() http.Handler {
 	router := mux.NewRouter()
-	router.HandleFunc("/user", s.GetUser).Methods("GET")
+	router.HandleFunc("/users", s.GetUser).Methods("GET")
 
 	// //Sign in/up with official account
 	// router.HandleFunc("/sign-in", s.SignIn).Methods("POST")
@@ -50,10 +50,11 @@ func (s *Server) publicAPI() http.Handler {
 	// router.HandleFunc("/auth/google/callback", s.GoogleCallBack).Methods("GET")
 
 	//Sheet routes
-	router.HandleFunc("/sheet", s.CreateSheet).Methods("POST")
+	router.HandleFunc("/sheets", s.CreateSheet).Methods("POST")
 
 	//Order routes
 	router.HandleFunc("/orders", s.GetOrders).Methods("GET")
+	router.HandleFunc("/orders/user", s.GetUserOrders).Methods("GET")
 
 	// router.HandleFunc("/ws", s.HandleWebSocket).Methods("GET")
 	return router

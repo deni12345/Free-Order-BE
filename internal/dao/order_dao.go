@@ -50,7 +50,7 @@ func (o *OrderImpl) FindsBySheet(ctx context.Context, sheetID string) (d.Orders,
 
 func (o *OrderImpl) FindsByUser(ctx context.Context, userID string) (d.Orders, error) {
 	var orders d.Orders
-	err := o.table.Scan().Index("UserOrderIndex").Filter("'UserID'=?", userID).All(ctx, &orders)
+	err := o.table.Scan().Index("UserOrderIndex").Filter("UserID=?", userID).All(ctx, &orders)
 	if err != nil {
 		return nil, err
 	}

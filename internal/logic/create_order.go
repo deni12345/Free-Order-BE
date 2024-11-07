@@ -5,7 +5,6 @@ import (
 	"fmt"
 	d "github/free-order-be/internal/domain"
 	"github/free-order-be/models"
-	"log"
 )
 
 func (l *LogicImpl) CreateOrder(ctx context.Context, req *models.Order) (*models.Order, error) {
@@ -23,7 +22,6 @@ func (l *LogicImpl) CreateOrder(ctx context.Context, req *models.Order) (*models
 
 	err = l.Client.OrderDAO.Create(ctx, ctxOrder)
 	if err != nil {
-		log.Printf("[Logic] Create order on err: %v", err)
 		return nil, err
 	}
 	return ctxOrder.GetModelOrder(), nil

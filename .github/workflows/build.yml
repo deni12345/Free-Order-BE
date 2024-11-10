@@ -33,7 +33,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: setup
 
-    steps:      
+    steps: 
+      - uses: actions/checkout@v4
+    
       - name: Zip file
         run: make zip
 

@@ -51,4 +51,5 @@ jobs:
           zip_file: main.zip
           source: build/main
           function_name: free-order-be
+          runtime: go1.x 
   

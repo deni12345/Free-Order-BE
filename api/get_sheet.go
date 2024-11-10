@@ -9,17 +9,17 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (s Server) GetOrders(w http.ResponseWriter, r *http.Request) {
-	req := &models.GetOrdersReq{}
+func (s Server) GetSheet(w http.ResponseWriter, r *http.Request) {
+	req := &models.GetSheetReq{}
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
-		logrus.Infof("[API] GetOrder on err: %s \n", err)
+		logrus.Infof("[API] GetSheet on err: %s \n", err)
 		BadRequest(w, err)
 		return
 	}
 
-	resp, err := s.logic.GetOrders(r.Context(), req)
+	resp, err := s.logic.GetSheet(r.Context(), req)
 	if err != nil {
-		logrus.Infof("[API] GetOrders on err: %s \n", err)
+		logrus.Infof("[API] GetSheet on err: %s \n", err)
 		InternalError(w, err)
 		return
 	}

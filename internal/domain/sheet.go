@@ -20,20 +20,21 @@ type Sheet struct {
 	HostIDs  string    `dynamo:"HostUserId"`
 	IsActive bool      `dynamo:"IsActive"`
 	CreateAt time.Time `dynamo:"CreateAt"`
+	Orders   Orders    `dynamo:"-"`
 }
 
 func (s *Sheet) GetPK() string {
-	if s != nil {
+	if s != nil && s.PK != "" {
 		return s.PK
 	}
-	return ""
+	return UNDEFINED
 }
 
 func (s *Sheet) GetSK() string {
-	if s != nil {
+	if s != nil && s.SK != "" {
 		return s.SK
 	}
-	return ""
+	return UNDEFINED
 }
 
 func (s *Sheet) GetName() string {
@@ -71,8 +72,8 @@ func (s *Sheet) GetIsActive() bool {
 	return false
 }
 
-func (s *Sheet) CheckNil() *Sheet {
-	if s.PK != "" {
+func (s *Sheet) IsNil() *Sheet {
+	if s.GetPK() != UNDEFINED {
 		return s
 	}
 	return nil
@@ -86,6 +87,7 @@ func (s *Sheet) GetModelSheet() *models.Sheet {
 		MenuURL:  s.GetMenuURL(),
 		HostIDs:  s.GetHostIDs(),
 		IsActive: s.GetIsActive(),
+		Orders:   s.Orders.GetModelOrders(),
 	}
 }
 

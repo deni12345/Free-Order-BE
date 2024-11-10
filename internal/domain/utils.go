@@ -3,7 +3,8 @@ package domain
 import "golang.org/x/crypto/bcrypt"
 
 const (
-	costNum = 14
+	costNum   = 14
+	UNDEFINED = "undefined"
 )
 
 func HashPassword(password string) (string, error) {

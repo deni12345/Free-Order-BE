@@ -9,15 +9,15 @@ import (
 
 func (l *LogicImpl) CreateOrder(ctx context.Context, req *models.Order) (*models.Order, error) {
 	ctxOrder := d.BuildDomainOrder(req)
-	if ctxOrder == nil {
+	if ctxOrder.IsValid() == nil {
 		return nil, fmt.Errorf("[Logic] cannot parse model order")
 	}
-	orders, err := l.Client.OrderDAO.FindsBySheet(ctx, ctxOrder.GetPK())
+	order, err := l.Client.OrderDAO.FindByID(ctx, ctxOrder)
 	if err != nil {
 		return nil, err
 	}
-	if len(orders) > 0 {
-		return nil, fmt.Errorf("order %v already exist", ctxOrder.GetName())
+	if order.IsNil() != nil {
+		return nil, fmt.Errorf("order id %v already exist", ctxOrder.GetName())
 	}
 
 	err = l.Client.OrderDAO.Create(ctx, ctxOrder)

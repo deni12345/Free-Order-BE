@@ -14,11 +14,12 @@ type Logic interface {
 
 	//Order
 	CreateOrder(context.Context, *models.Order) (*models.Order, error)
-	GetOrders(context.Context, *models.GetOrdersReq) (models.Orders, error)
+	GetSheetOrders(context.Context, *models.GetSheetOrdersReq) (models.Orders, error)
 	GetUserOrders(context.Context, *models.GetUserOrdersReq) (models.Orders, error)
 
 	//Sheet
 	CreateSheet(context.Context, *models.Sheet) (*models.Sheet, error)
+	GetSheet(context.Context, *models.GetSheetReq) (*models.Sheet, error)
 }
 type LogicImpl struct {
 	SecretKey []byte

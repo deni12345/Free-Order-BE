@@ -6,11 +6,11 @@ import (
 	"github/free-order-be/models"
 )
 
-func (l *LogicImpl) GetOrders(ctx context.Context, req *models.GetOrdersReq) (models.Orders, error) {
+func (l *LogicImpl) GetSheetOrders(ctx context.Context, req *models.GetSheetOrdersReq) (models.Orders, error) {
 	if req == nil {
 		return nil, fmt.Errorf("[Logic] Invalid get order request")
 	}
-	orders, err := l.Client.OrderDAO.FindsBySheet(ctx, req.GetSheetID())
+	orders, err := l.Client.OrderDAO.FindAllBySheet(ctx, req.GetSheetID())
 	if err != nil {
 		return nil, err
 	}

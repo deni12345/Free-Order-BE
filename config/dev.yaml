@@ -1,5 +1,5 @@
-secret_key: mysecretkeyhahahaha
+secret_key: mysecretkey
 google_client_id:
 google_client_secret:
 db:
-  region: 
+  region: us-east-1

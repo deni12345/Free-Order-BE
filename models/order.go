@@ -15,11 +15,11 @@ type Order struct {
 	CreateDatim time.Time `json:"created_at,omitempty"`
 }
 
-type GetOrdersReq struct {
+type GetSheetOrdersReq struct {
 	SheetID string `json:"sheet_id"`
 }
 
-func (req *GetOrdersReq) GetSheetID() string {
+func (req *GetSheetOrdersReq) GetSheetID() string {
 	if req != nil {
 		return req.SheetID
 	}

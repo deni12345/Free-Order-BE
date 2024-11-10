@@ -10,8 +10,9 @@ import (
 
 type IOrderDAO interface {
 	Create(context.Context, *d.Order) error
-	FindsBySheet(context.Context, string) (d.Orders, error)
-	FindsByUser(context.Context, string) (d.Orders, error)
+	FindByID(context.Context, *d.Order) (*d.Order, error)
+	FindAllBySheet(context.Context, string) (d.Orders, error)
+	FindAllByUser(context.Context, string) (d.Orders, error)
 }
 
 type OrderImpl struct {
@@ -39,7 +40,19 @@ func (o *OrderImpl) Create(ctx context.Context, order *d.Order) error {
 	return o.table.Put(order).Run(ctx)
 }
 
-func (o *OrderImpl) FindsBySheet(ctx context.Context, sheetID string) (d.Orders, error) {
+func (o *OrderImpl) FindByID(ctx context.Context, order *d.Order) (*d.Order, error) {
+	var result = &d.Order{}
+	err := o.table.Get("PK", order.GetPK()).Range("SK", dynamo.Equal, order.GetSK()).One(ctx, result)
+	if err != nil {
+		if err == dynamo.ErrNotFound {
+			return result, nil
+		}
+		return nil, err
+	}
+	return result, nil
+}
+
+func (o *OrderImpl) FindAllBySheet(ctx context.Context, sheetID string) (d.Orders, error) {
 	var orders d.Orders
 	err := o.table.Get("PK", sheetID).Range("SK", dynamo.BeginsWith, "ORDER#").All(ctx, &orders)
 	if err != nil {
@@ -48,7 +61,7 @@ func (o *OrderImpl) FindsBySheet(ctx context.Context, sheetID string) (d.Orders,
 	return orders, nil
 }
 
-func (o *OrderImpl) FindsByUser(ctx context.Context, userID string) (d.Orders, error) {
+func (o *OrderImpl) FindAllByUser(ctx context.Context, userID string) (d.Orders, error) {
 	var orders d.Orders
 	err := o.table.Scan().Index("UserOrderIndex").Filter("UserID=?", userID).All(ctx, &orders)
 	if err != nil {

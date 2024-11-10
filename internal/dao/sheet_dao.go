@@ -4,12 +4,17 @@ import (
 	"context"
 	"fmt"
 	d "github/free-order-be/internal/domain"
+	"strings"
+	"sync"
 
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/guregu/dynamo/v2"
+	"golang.org/x/sync/errgroup"
 )
 
 type ISheetDAO interface {
 	CreateInfo(context.Context, *d.Sheet) error
+	FindByID(context.Context, string) (*d.Sheet, error)
 	FindsByName(context.Context, string) (d.Sheets, error)
 }
 
@@ -45,6 +50,46 @@ func (s *SheetImpl) FindsByName(ctx context.Context, name string) (d.Sheets, err
 		return nil, err
 	}
 	return sheets, nil
+}
+
+func (s *SheetImpl) FindByID(ctx context.Context, id string) (*d.Sheet, error) {
+	var result = []map[string]types.AttributeValue{}
+	err := s.table.Scan().Filter("PK=?", id).All(ctx, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return toSheet(result), nil
+}
+
+func toSheet(items []map[string]types.AttributeValue) *d.Sheet {
+	var (
+		mu    sync.Mutex
+		sheet = &d.Sheet{}
+		eg    = errgroup.Group{}
+	)
+	for _, item := range items {
+		SK := item["SK"].(*types.AttributeValueMemberS).Value
+		eg.Go(func() error {
+			if strings.Contains(SK, "ORDER#") {
+				var order *d.Order
+				if err := dynamo.UnmarshalItem(item, &order); err != nil {
+					return err
+				}
+				mu.Lock()
+				sheet.Orders = append(sheet.Orders, order)
+				mu.Unlock()
+
+			} else {
+				return dynamo.UnmarshalItem(item, sheet)
+			}
+			return nil
+		})
+	}
+	if err := eg.Wait(); err != nil {
+		return nil
+	}
+	return sheet
 }
 
 func (s *SheetImpl) createSheetPK(id *uint) string {

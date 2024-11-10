@@ -9,7 +9,7 @@ type Orders []*Order
 
 type Order struct {
 	PK       string    `dynamo:"PK,hash"`
-	SK       string    `dynamo:"PK,hash"`
+	SK       string    `dynamo:"SK,hash"`
 	Name     string    `dynamo:"Name"`
 	UserID   string    `dynamo:"UserID"`
 	Amount   uint      `dynamo:"Amount"`
@@ -19,21 +19,28 @@ type Order struct {
 }
 
 func (o *Order) GetPK() string {
-	if o != nil {
+	if o != nil && o.PK != "" {
 		return o.PK
 	}
-	return ""
+	return UNDEFINED
 }
 
 func (o *Order) GetSK() string {
-	if o != nil {
+	if o != nil && o.SK != "" {
 		return o.SK
 	}
-	return ""
+	return UNDEFINED
 }
 
-func (o *Order) CheckNil() *Order {
-	if o.PK != "" {
+func (o *Order) IsValid() *Order {
+	if o.GetPK() != UNDEFINED {
+		return o
+	}
+	return nil
+}
+
+func (o *Order) IsNil() *Order {
+	if o.GetSK() != UNDEFINED {
 		return o
 	}
 	return nil

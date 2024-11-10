@@ -6,20 +6,20 @@ on:
   pull_request:
     branches: ["main"]
 
+env:
+  RUN_ENV: ${{ vars.ACTION_ENV }}
+
 jobs:
-  build:
+  setup:
     environment: dev
     runs-on: ubuntu-latest
-
-    env:
-      ACTION_ENV: ${{ vars.ACTION_ENV }}
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Log env
         run: |
-          echo "code is running on: $ACTION_ENV"
+          echo "code is running on : $RUN_ENV"
 
       - name: Set up Go
         uses: actions/setup-go@v4
@@ -28,12 +28,20 @@ jobs:
 
       - name: Install
         run: make tidy
+  deploy:
+    environment: dev
+    runs-on: ubuntu-latest
 
-      # - name: Run test
-      #   run: make test
-
+    steps:      
       - name: Build
         run: make build
 
-      - name: Run
-        run: make run
+      - name: Deploy lambda
+        uses: appleboy/lambda-action@v0.2.0
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region:  ${{ secrets.AWS_REGION }}
+          handler: main
+          function_name: free-order-be
+  

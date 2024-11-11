@@ -20,7 +20,7 @@ func (cfg *configValue) ResolveEndpoint(ctx context.Context, params dynamodb.End
 
 	endpointString := cfg.DynamodbEndpoint
 	if cfg.Env != LOCAL && cfg.DB.Region != "" {
-		endpointString = fmt.Sprintf("https://stg.dynamodb.%s.amazonaws.com", cfg.DB.Region)
+		endpointString = fmt.Sprintf("https://dynamodb.%s.amazonaws.com", cfg.DB.Region)
 	}
 
 	if endpointURL, err = url.Parse(endpointString); err != nil {

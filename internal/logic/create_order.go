@@ -16,7 +16,7 @@ func (l *LogicImpl) CreateOrder(ctx context.Context, req *models.Order) (*models
 	if err != nil {
 		return nil, err
 	}
-	if order.IsNil() != nil {
+	if order.IsNil() {
 		return nil, fmt.Errorf("order id %v already exist", ctxOrder.GetName())
 	}
 

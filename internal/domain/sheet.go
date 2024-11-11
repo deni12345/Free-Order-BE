@@ -72,11 +72,11 @@ func (s *Sheet) GetIsActive() bool {
 	return false
 }
 
-func (s *Sheet) IsNil() *Sheet {
+func (s *Sheet) IsNil() bool {
 	if s.GetPK() != UNDEFINED {
-		return s
+		return false
 	}
-	return nil
+	return true
 }
 
 func (s *Sheet) GetModelSheet() *models.Sheet {

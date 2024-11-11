@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -43,8 +44,9 @@ func LoadConfig() {
 func loadConfigValues(env string) *configValue {
 	values := &configValue{}
 	values.Env = env
-	content, err := os.ReadFile(fmt.Sprintf(`./config/%s.yaml`, env))
-	if err != nil {
+
+	content, err := os.ReadFile(fmt.Sprintf(`./config/%s.yaml`, "dev"))
+	if !errors.Is(err, os.ErrNotExist) {
 		logrus.Fatalf("error read config yaml file for %s: %v", env, err)
 		return nil
 	}

@@ -14,7 +14,7 @@ func (l *LogicImpl) GetSheet(ctx context.Context, req *models.GetSheetReq) (*mod
 	if err != nil {
 		return nil, err
 	}
-	if sheet.IsNil() == nil {
+	if sheet.IsNil() {
 		return nil, fmt.Errorf("[Logic] there is no sheet founded")
 	}
 	return sheet.GetModelSheet(), nil

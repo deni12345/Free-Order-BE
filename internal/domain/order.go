@@ -39,11 +39,11 @@ func (o *Order) IsValid() *Order {
 	return nil
 }
 
-func (o *Order) IsNil() *Order {
+func (o *Order) IsNil() bool {
 	if o.GetSK() != UNDEFINED {
-		return o
+		return false
 	}
-	return nil
+	return true
 }
 
 func (o *Order) GetName() string {

@@ -16,19 +16,16 @@ import (
 
 func (cfg *configValue) ResolveEndpoint(ctx context.Context, params dynamodb.EndpointParameters) (smithyendpoints.Endpoint, error) {
 	var (
-		endpoint *url.URL
-		err      error
+		endpoint   *url.URL
+		err        error
+		connString = cfg.DynamodbEndpoint
 	)
-	if cfg.Env == LOCAL {
-		endpoint, err = url.Parse(cfg.DynamodbEndpoint)
-		if err != nil {
-			return smithyendpoints.Endpoint{}, err
-		}
-	} else {
-		endpoint, err = url.Parse(fmt.Sprintf("https://stg.dynamodb.%s.amazonaws.com", cfg.DB.Region))
-		if err != nil {
-			return smithyendpoints.Endpoint{}, err
-		}
+	if cfg.Env != LOCAL && cfg.DB.Region != "" {
+		connString = fmt.Sprintf("https://stg.dynamodb.%s.amazonaws.com", cfg.DB.Region)
+	}
+
+	if endpoint, err = url.Parse(connString); err != nil {
+		return smithyendpoints.Endpoint{}, err
 	}
 	return smithyendpoints.Endpoint{URI: *endpoint}, nil
 }

@@ -1,5 +1,0 @@
-secret_key: mysecretkey
-google_client_id:
-google_client_secret:
-db:
-  region: us-east-1

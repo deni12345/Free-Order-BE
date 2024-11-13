@@ -10,6 +10,7 @@ type User struct {
 	Phone       string    `json:"phone"`
 	UserName    string    `json:"user_name"`
 	Password    string    `json:"password,omitempty"`
+	IsActive    bool      `json:"is_active"`
 	CreateDatim time.Time `json:"create_datim"`
 }
 

@@ -3,10 +3,11 @@ package api
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/sirupsen/logrus"
+	"google.golang.org/api/option"
+	people "google.golang.org/api/people/v1"
 )
 
 var (
@@ -14,7 +15,7 @@ var (
 )
 
 func (s Server) GoogleCallBack(w http.ResponseWriter, r *http.Request) {
-	data, err := getUserDataFromGoogle(r.FormValue("code"))
+	data, err := s.getUserDataFromGoogle(r.Context(), r.FormValue("code"))
 	if err != nil {
 		logrus.Println(err.Error())
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
@@ -25,26 +26,20 @@ func (s Server) GoogleCallBack(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, redirectURL, http.StatusPermanentRedirect)
 }
 
-func getUserDataFromGoogle(code string) ([]byte, error) {
-	token, err := googleOauthConfig.Exchange(context.Background(), code)
+func (s Server) getUserDataFromGoogle(ctx context.Context, code string) ([]byte, error) {
+	token, err := s.googleOauth.Exchange(ctx, code)
 	if err != nil {
 		return nil, fmt.Errorf("code exchange wrong: %s", err.Error())
 	}
 
-	req, err := http.NewRequest(http.MethodGet, googleUserIdAPI, nil)
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", token.AccessToken))
+	client, err := people.NewService(ctx, option.WithTokenSource(s.googleOauth.TokenSource(ctx, token)))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("client wrong: %s", err.Error())
 	}
-	res, err := http.DefaultClient.Do(req)
+	resp, err := client.People.Get("people/me").PersonFields("names,emailAddresses").Do()
 	if err != nil {
-		return nil, fmt.Errorf("failed getting user info: %s", err.Error())
+		return nil, fmt.Errorf("client wrong: %s", err.Error())
 	}
 
-	defer res.Body.Close()
-	contents, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return nil, fmt.Errorf("failed read response: %s", err.Error())
-	}
-	return contents, nil
+	return resp.MarshalJSON()
 }

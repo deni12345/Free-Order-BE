@@ -2,6 +2,7 @@ package api
 
 import (
 	. "github/free-order-be/api/middleware"
+	"github/free-order-be/config"
 	"github/free-order-be/internal/dao"
 	"github/free-order-be/internal/logic"
 
@@ -11,6 +12,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
+	people "google.golang.org/api/people/v1"
 )
 
 type Server struct {
@@ -22,10 +25,19 @@ type Server struct {
 }
 
 func NewServer(daoInst *dao.DAO) *Server {
+	googleOauthConfig := &oauth2.Config{
+		RedirectURL:  "http://localhost:8080/api/public/auth/google/callback",
+		ClientID:     config.Values.GoogleID,
+		ClientSecret: config.Values.GoogleClientSecret,
+		Scopes:       []string{people.UserinfoEmailScope, people.UserinfoProfileScope},
+		Endpoint:     google.Endpoint,
+	}
+
 	s := &Server{
-		Router:   mux.NewRouter(),
-		logic:    logic.NewLogicImpl(daoInst),
-		upgrader: configWebSocketUpgrader(),
+		Router:      mux.NewRouter(),
+		logic:       logic.NewLogicImpl(daoInst),
+		upgrader:    configWebSocketUpgrader(),
+		googleOauth: googleOauthConfig,
 	}
 
 	s.Router.Use(ContentTypeJsonMiddleware)
@@ -46,8 +58,8 @@ func (s *Server) publicAPI() http.Handler {
 	router.HandleFunc("/sign-up", s.SignUp).Methods("POST")
 
 	// //Sign in/up with google account
-	// router.HandleFunc("/auth/google/login", s.GoogleSignIn).Methods("GET")
-	// router.HandleFunc("/auth/google/callback", s.GoogleCallBack).Methods("GET")
+	router.HandleFunc("/auth/google/login", s.GoogleSignIn).Methods("GET")
+	router.HandleFunc("/auth/google/callback", s.GoogleCallBack).Methods("GET")
 
 	//Sheet routes
 	router.HandleFunc("/sheets", s.CreateSheet).Methods("POST")

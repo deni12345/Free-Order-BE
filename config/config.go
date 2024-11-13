@@ -1,7 +1,6 @@
 package config
 
 import (
-	"errors"
 	"fmt"
 	"os"
 
@@ -27,7 +26,7 @@ type database struct {
 type configValue struct {
 	Env                string
 	SecretKey          string   `yaml:"secret_key" envconfig:"SECRET_KEY"`
-	GoogleClientID     string   `yaml:"google_client_id" envconfig:"GOOGLE_CLIENT_ID"`
+	GoogleID           string   `yaml:"google_id" envconfig:"GOOGLE_ID"`
 	GoogleClientSecret string   `yaml:"google_client_secret" envconfig:"GOOGLE_CLIENT_SECRET"`
 	DynamodbEndpoint   string   `yaml:"dynamodb_endpoint" envconfig:"DYNAMODB_ENDPOINT"`
 	DB                 database `yaml:"db"`
@@ -39,6 +38,7 @@ func LoadConfig() {
 		Environment = LOCAL
 	}
 	Values = loadConfigValues(Environment)
+	logrus.Infof("config values: %+v", Values)
 }
 
 func loadConfigValues(env string) *configValue {
@@ -46,7 +46,7 @@ func loadConfigValues(env string) *configValue {
 	values.Env = env
 
 	content, err := os.ReadFile(fmt.Sprintf(`./config/%s.yaml`, env))
-	if err != nil && !errors.Is(err, os.ErrNotExist) {
+	if err != nil {
 		logrus.Fatalf("error read config yaml file for %s: %v", env, err)
 		return nil
 	}

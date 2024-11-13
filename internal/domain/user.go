@@ -9,11 +9,12 @@ type Users []*User
 
 type User struct {
 	ID           *uint     `dynamo:"Id,hash"`
-	UserName     string    `dynamo:"Name,range"`
+	Name         string    `dynamo:"Name,range"`
 	HashPassword string    `dynamo:"Password"`
 	Email        string    `dynamo:"Email"`
 	Phone        string    `dynamo:"Phone"`
 	CreateDatim  time.Time `dynamo:"CreateDatim"`
+	IsActive     bool      `dynamo:"IsActive"`
 }
 
 func (u *User) GetID() *uint {
@@ -25,7 +26,7 @@ func (u *User) GetID() *uint {
 
 func (u *User) GetName() string {
 	if u != nil {
-		return u.UserName
+		return u.Name
 	}
 	return ""
 }
@@ -46,7 +47,7 @@ func (u *User) GetEmail() string {
 
 func (u *User) GetPhone() string {
 	if u != nil {
-		return u.UserName
+		return u.Name
 	}
 	return ""
 }
@@ -58,11 +59,18 @@ func (u *User) GetCreateDatim() time.Time {
 	return time.Time{}
 }
 
-func (u *User) CheckNil() *User {
-	if u.ID != nil {
-		return u
+func (u *User) GetIsActive() bool {
+	if u != nil {
+		return u.IsActive
 	}
-	return nil
+	return false
+}
+
+func (u *User) IsNil() bool {
+	if u != nil && u.ID != nil {
+		return true
+	}
+	return false
 }
 
 func (u *User) GetModelUser() *models.User {
@@ -72,6 +80,7 @@ func (u *User) GetModelUser() *models.User {
 		Phone:       u.GetPhone(),
 		UserName:    u.GetName(),
 		Password:    u.GetHashPassword(),
+		IsActive:    u.GetIsActive(),
 		CreateDatim: u.GetCreateDatim(),
 	}
 }
@@ -86,7 +95,7 @@ func BuildDomainUser(v *models.User) *User {
 	}
 	return &User{
 		ID:           v.ID,
-		UserName:     v.UserName,
+		Name:         v.UserName,
 		HashPassword: hashPasword,
 		Email:        v.Email,
 		Phone:        v.Phone,

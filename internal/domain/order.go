@@ -8,14 +8,35 @@ import (
 type Orders []*Order
 
 type Order struct {
-	PK       string    `dynamo:"PK,hash"`
-	SK       string    `dynamo:"SK,hash"`
-	Name     string    `dynamo:"Name"`
-	UserID   string    `dynamo:"UserID"`
-	Amount   uint      `dynamo:"Amount"`
-	Price    uint      `dynamo:"Price"`
-	IsActive bool      `dynamo:"IsActive"`
-	CreateAt time.Time `dynamo:"CreateAt"`
+	PK       string    `dynamo:"PK,hash" firestore:"-"`
+	SK       string    `dynamo:"SK,range" firestore:"-"`
+	Name     string    `dynamo:"Name" firestore:"name"`
+	UserID   string    `dynamo:"UserID" firestore:"user_id"`
+	Amount   uint      `dynamo:"Amount" firestore:"amount"`
+	Price    uint      `dynamo:"Price" firestore:"price"`
+	IsActive bool      `dynamo:"IsActive" firestore:"is_active"`
+	CreateAt time.Time `dynamo:"CreateAt" firestore:"created_at"`
+}
+
+type FirestoreOrder struct {
+	*Order
+	Amount int64 `firestore:"amount"`
+	Price  int64 `firestore:"price"`
+}
+
+func NewFirestoreOrder(o *Order) *FirestoreOrder {
+	return &FirestoreOrder{
+		Order: &Order{
+			PK:       o.GetPK(),
+			SK:       o.GetSK(),
+			Name:     o.GetName(),
+			UserID:   o.GetUserID(),
+			IsActive: o.GetIsActive(),
+			CreateAt: o.GetCreateAt(),
+		},
+		Amount: int64(o.GetAmount()), // Convert uint to int64
+		Price:  int64(o.GetPrice()),  // Convert uint to int64
+	}
 }
 
 func (o *Order) GetPK() string {

@@ -14,7 +14,7 @@ zip: build
 	$(GOPATH)\bin\build-lambda-zip.exe -o build/main.zip build/main
 
 lint:
-	golangci-lint run
+	golangci-lint run --fix
 
 run:
 	go run ./cmd/$(SAMPLE_BINARY_NAME).go

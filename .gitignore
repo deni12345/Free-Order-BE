@@ -1,4 +1,5 @@
 build
 
-# # ignore local.yaml
+# ignore file in config folder
 config/local.yaml
+config/credential-firebase.json

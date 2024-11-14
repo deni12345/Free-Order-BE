@@ -30,6 +30,7 @@ type configValue struct {
 	GoogleClientSecret string   `yaml:"google_client_secret" envconfig:"GOOGLE_CLIENT_SECRET"`
 	DynamodbEndpoint   string   `yaml:"dynamodb_endpoint" envconfig:"DYNAMODB_ENDPOINT"`
 	DB                 database `yaml:"db"`
+	FirebaseCredential string   `yaml:"firebase_credential" envconfig:"FIREBASE_CREDENTIAL"`
 }
 
 func LoadConfig() {
@@ -44,6 +45,7 @@ func LoadConfig() {
 func loadConfigValues(env string) *configValue {
 	values := &configValue{}
 	values.Env = env
+	values.FirebaseCredential = "./config/credential-firebase.json"
 
 	content, err := os.ReadFile(fmt.Sprintf(`./config/%s.yaml`, env))
 	if err != nil {

@@ -21,18 +21,21 @@ var (
 )
 
 func init() {
+	var err error
 	config.LoadConfig()
 	config.InitLogrus()
 
 	conn := config.Values.ConnectDB(context.Background())
-	daoInst = dao.NewDAO(conn)
-
+	daoInst, err = dao.NewDAO(context.Background(), conn)
+	if err != nil {
+		logrus.Infof("error create dao: %s", err)
+	}
 	tables, _ := conn.ListTables().All(context.Background())
 	logrus.Infof("list table on database %v", tables)
 }
 
 func main() {
-	custom.PrintLogo()
+	custom.InitBanner()
 	server := api.NewServer(daoInst)
 
 	if os.Getenv("RUN_ENV") == config.DEV || os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "" {

@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"fmt"
+	"github/free-order-be/internal/domain"
 	d "github/free-order-be/internal/domain"
 	"github/free-order-be/models"
 )
@@ -16,11 +17,16 @@ func (l *LogicImpl) CreateOrder(ctx context.Context, req *models.Order) (*models
 	if err != nil {
 		return nil, err
 	}
-	if order.IsNil() {
+	if !order.IsNil() {
 		return nil, fmt.Errorf("order id %v already exist", ctxOrder.GetName())
 	}
 
 	err = l.Client.OrderDAO.Create(ctx, ctxOrder)
+	if err != nil {
+		return nil, err
+	}
+	err = l.Client.OrderDAO.CreateRealtime(ctx, domain.NewFirestoreOrder(ctxOrder))
+
 	if err != nil {
 		return nil, err
 	}

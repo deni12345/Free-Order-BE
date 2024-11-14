@@ -5,7 +5,9 @@ import (
 	"fmt"
 	d "github/free-order-be/internal/domain"
 
+	"cloud.google.com/go/firestore"
 	"github.com/guregu/dynamo/v2"
+	"github.com/sirupsen/logrus"
 )
 
 type IOrderDAO interface {
@@ -13,18 +15,32 @@ type IOrderDAO interface {
 	FindByID(context.Context, *d.Order) (*d.Order, error)
 	FindAllBySheet(context.Context, string) (d.Orders, error)
 	FindAllByUser(context.Context, string) (d.Orders, error)
+
+	//firestore
+	CreateRealtime(context.Context, *d.FirestoreOrder) error
 }
 
 type OrderImpl struct {
-	dao   *DAO
-	table dynamo.Table
+	dao       *DAO
+	table     dynamo.Table
+	firestore *firestore.Client
 }
 
-func NewOrderDAO(db *dynamo.DB) *OrderImpl {
+func NewOrderDAO(db *dynamo.DB, firestore *firestore.Client) *OrderImpl {
 	return &OrderImpl{
-		dao:   NewDAORef(db),
-		table: db.Table(SHEET_TABLE),
+		dao:       NewDAORef(db),
+		table:     db.Table(SHEET_TABLE),
+		firestore: firestore,
 	}
+}
+
+func (o *OrderImpl) CreateRealtime(ctx context.Context, order *d.FirestoreOrder) error {
+	_, err := o.firestore.Collection(order.GetPK()).Doc(order.GetSK()).Set(ctx, order)
+	if err != nil {
+		return err
+	}
+	logrus.Infof("Created document: %+v", order.GetPK())
+	return nil
 }
 
 func (o *OrderImpl) Create(ctx context.Context, order *d.Order) error {

@@ -5,10 +5,14 @@ import (
 	"fmt"
 	"strconv"
 
+	"github/free-order-be/config"
+
+	firebase "firebase.google.com/go"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/guregu/dynamo/v2"
+	"google.golang.org/api/option"
 )
 
 const (
@@ -26,13 +30,23 @@ type DAO struct {
 	OrderDAO IOrderDAO
 }
 
-func NewDAO(db *dynamo.DB) *DAO {
+func NewDAO(ctx context.Context, db *dynamo.DB) (*DAO, error) {
+	opt := option.WithCredentialsFile(config.Values.FirebaseCredential)
+	app, err := firebase.NewApp(ctx, nil, opt)
+	if err != nil {
+		return nil, err
+	}
+	firestore, err := app.Firestore(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	return &DAO{
 		UserDAO:  NewUserDAO(db),
 		SheetDAO: NewSheetDAO(db),
-		OrderDAO: NewOrderDAO(db),
+		OrderDAO: NewOrderDAO(db, firestore),
 		client:   db,
-	}
+	}, nil
 }
 
 func NewDAORef(db *dynamo.DB) *DAO {

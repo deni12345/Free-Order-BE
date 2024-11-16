@@ -8,7 +8,7 @@ install:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
 	
 build: 
-	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o build/main ./cmd/main.go
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o build/main ./cmd/main.go && cp ./banner/ascii-art.txt ./build
 
 zip: build
 	$(GOPATH)\bin\build-lambda-zip.exe -o build/main.zip build/main

@@ -31,7 +31,7 @@ type DAO struct {
 }
 
 func NewDAO(ctx context.Context, db *dynamo.DB) (*DAO, error) {
-	opt := option.WithCredentialsFile(config.Values.FirebaseCredential)
+	opt := option.WithCredentialsJSON([]byte(config.Values.FirebaseCredential))
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
 		return nil, err

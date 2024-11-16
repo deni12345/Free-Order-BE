@@ -2,15 +2,17 @@ package dao
 
 import (
 	"context"
+	"fmt"
 	d "github/free-order-be/internal/domain"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/guregu/dynamo/v2"
 )
 
 type IUserDAO interface {
 	Create(context.Context, *d.User) error
 	FindByID(context.Context, uint) (*d.User, error)
-	FindByEmail(context.Context, string) (d.Users, error)
+	FindByEmail(context.Context, string) (*d.User, error)
 }
 
 func NewUserDAO(client *dynamo.DB) IUserDAO {
@@ -35,7 +37,7 @@ func (u *UserImpl) Create(ctx context.Context, user *d.User) error {
 		return err
 	}
 
-	user.ID = newID
+	user.ID = createUserPK(newID)
 	return u.table.Put(user).Run(ctx)
 }
 
@@ -48,11 +50,18 @@ func (u *UserImpl) FindByID(ctx context.Context, ID uint) (*d.User, error) {
 	return result, nil
 }
 
-func (u *UserImpl) FindByEmail(ctx context.Context, email string) (d.Users, error) {
+func (u *UserImpl) FindByEmail(ctx context.Context, email string) (*d.User, error) {
 	var results = d.Users{}
-	err := u.table.Scan().Filter("$=?", "Email", email).All(ctx, &results)
+	err := u.table.Scan().Filter("Email=?", email).Limit(1).All(ctx, &results)
 	if err != nil {
 		return nil, err
 	}
-	return results, nil
+	if len(results) == 0 {
+		return &d.User{}, nil
+	}
+	return results[0], nil
+}
+
+func createUserPK(id *uint) *string {
+	return aws.String(fmt.Sprintf("USER#%v", *id))
 }

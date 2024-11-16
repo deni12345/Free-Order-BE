@@ -5,13 +5,17 @@ import (
 )
 
 type User struct {
-	ID          *uint     `json:"id"`
+	ID          *string   `json:"id"`
 	Email       string    `json:"email"`
 	Phone       string    `json:"phone"`
 	UserName    string    `json:"user_name"`
 	Password    string    `json:"password,omitempty"`
 	IsActive    bool      `json:"is_active"`
+	GoogleID    string    `json:"google_id,omitempty"`
 	CreateDatim time.Time `json:"create_datim"`
+}
+
+type GoogelUser struct {
 }
 
 type GetUserReq struct {
@@ -26,7 +30,7 @@ func (r *GetUserReq) GetUserID() uint {
 }
 
 type SignInResp struct {
-	Token    string   `json:"token"`
-	Role     []string `json:"role"`
-	UserName string   `json:"user_name"`
+	Token    string `json:"token"`
+	UserName string `json:"user_name"`
+	Email    string `json:"email"`
 }

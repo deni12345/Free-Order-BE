@@ -3,21 +3,24 @@ package domain
 import (
 	"github/free-order-be/models"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 type Users []*User
 
 type User struct {
-	ID           *uint     `dynamo:"Id,hash"`
+	ID           *string   `dynamo:"ID,hash"`
 	Name         string    `dynamo:"Name,range"`
 	HashPassword string    `dynamo:"Password"`
 	Email        string    `dynamo:"Email"`
 	Phone        string    `dynamo:"Phone"`
 	CreateDatim  time.Time `dynamo:"CreateDatim"`
+	GoogleID     string    `dynamo:"GoogleID"`
 	IsActive     bool      `dynamo:"IsActive"`
 }
 
-func (u *User) GetID() *uint {
+func (u *User) GetID() *string {
 	if u != nil {
 		return u.ID
 	}
@@ -68,9 +71,9 @@ func (u *User) GetIsActive() bool {
 
 func (u *User) IsNil() bool {
 	if u != nil && u.ID != nil {
-		return true
+		return false
 	}
-	return false
+	return true
 }
 
 func (u *User) GetModelUser() *models.User {
@@ -89,6 +92,7 @@ func BuildDomainUser(v *models.User) *User {
 	if v == nil {
 		return nil
 	}
+	logrus.Infof("Test %v", v.Password)
 	hashPasword, err := HashPassword(v.Password)
 	if err != nil {
 		return nil
@@ -99,13 +103,15 @@ func BuildDomainUser(v *models.User) *User {
 		HashPassword: hashPasword,
 		Email:        v.Email,
 		Phone:        v.Phone,
+		IsActive:     v.IsActive,
+		GoogleID:     v.GoogleID,
 		CreateDatim:  time.Now().UTC(),
 	}
 }
 
-func (u *User) ValidIdentity(v *models.User) bool {
+func (u *User) IsValid(v *User) bool {
 	if u != nil {
-		return CheckPasswordHash(v.Password, u.HashPassword)
+		return CheckPasswordHash(v.GetHashPassword(), u.GetHashPassword())
 	}
 	return false
 }

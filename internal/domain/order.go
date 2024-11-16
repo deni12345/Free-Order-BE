@@ -53,11 +53,11 @@ func (o *Order) GetSK() string {
 	return UNDEFINED
 }
 
-func (o *Order) IsValid() *Order {
+func (o *Order) IsValid() bool {
 	if o.GetPK() != UNDEFINED {
-		return o
+		return true
 	}
-	return nil
+	return false
 }
 
 func (o *Order) IsNil() bool {

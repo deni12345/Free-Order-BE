@@ -9,8 +9,8 @@ import (
 type Logic interface {
 	//User
 	GetUser(context.Context, *models.GetUserReq) (*models.User, error)
-	SignUp(context.Context, *models.User) (*models.User, error)
-	// SignIn(context.Context, *models.User) (*models.SignInResp, error)
+	CreateUser(context.Context, *models.User) (*models.User, error)
+	SignIn(context.Context, *models.User) (*models.SignInResp, error)
 
 	//Order
 	CreateOrder(context.Context, *models.Order) (*models.Order, error)

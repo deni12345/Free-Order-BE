@@ -7,6 +7,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/guregu/dynamo/v2"
 	"golang.org/x/sync/errgroup"
@@ -38,8 +39,8 @@ func (s *SheetImpl) CreateInfo(ctx context.Context, sheet *d.Sheet) error {
 	if newID == nil {
 		return fmt.Errorf("failed to get next id")
 	}
-	sheet.PK = s.createSheetPK(newID)
-	sheet.SK = SHEET_SK
+	sheet.PK = createSheetPK(newID)
+	sheet.SK = aws.String(SHEET_SK)
 	return s.table.Put(sheet).Run(ctx)
 }
 
@@ -62,6 +63,7 @@ func (s *SheetImpl) FindByID(ctx context.Context, id string) (*d.Sheet, error) {
 	return toSheet(result), nil
 }
 
+// This convert dynamo sheet fields to sheet domain which contains orders in go
 func toSheet(items []map[string]types.AttributeValue) *d.Sheet {
 	var (
 		mu    sync.Mutex
@@ -92,6 +94,6 @@ func toSheet(items []map[string]types.AttributeValue) *d.Sheet {
 	return sheet
 }
 
-func (s *SheetImpl) createSheetPK(id *uint) string {
-	return fmt.Sprintf("SHEET#%v", *id)
+func createSheetPK(id *uint) *string {
+	return aws.String(fmt.Sprintf("SHEET#%v", *id))
 }

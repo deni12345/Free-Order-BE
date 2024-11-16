@@ -16,7 +16,7 @@ func (s Server) SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := s.logic.SignUp(r.Context(), req)
+	resp, err := s.logic.CreateUser(r.Context(), req)
 	if err != nil {
 		InternalError(w, err)
 		return

@@ -31,6 +31,7 @@ type configValue struct {
 	DynamodbEndpoint   string   `yaml:"dynamodb_endpoint" envconfig:"DYNAMODB_ENDPOINT"`
 	DB                 database `yaml:"db"`
 	FirebaseCredential string   `yaml:"firebase_credential" envconfig:"FIREBASE_CREDENTIAL"`
+	RedirectURL        string   `yaml:"redirect_url" envconfig:"REDIRECT_URL"`
 }
 
 func LoadConfig() {
@@ -38,32 +39,26 @@ func LoadConfig() {
 	if Environment == UNDEFINE_ENV {
 		Environment = LOCAL
 	}
-	Values = loadConfigValues(Environment)
-	logrus.Infof("config values: %+v", Values)
+	loadConfigValues(Environment, Values)
 }
 
-func loadConfigValues(env string) *configValue {
-	values := &configValue{}
+func loadConfigValues(env string, values *configValue) *configValue {
 	values.Env = env
-	values.FirebaseCredential = "./config/credential-firebase.json"
 
 	content, err := os.ReadFile(fmt.Sprintf(`./config/%s.yaml`, env))
 	if err != nil {
-		logrus.Fatalf("error read config yaml file for %s: %v", env, err)
+		logrus.Infof("error read config yaml file for %s: %v", env, err)
+	}
+
+	if err = envconfig.Process("", values); err != nil {
+		logrus.Infof("error process envconfig value for %s: %v", env, err)
+		return nil
+	}
+	if err = yaml.Unmarshal(content, values); err != nil {
+		logrus.Infof("error umarshal yaml config file for %s: %v", env, err)
 		return nil
 	}
 
-	err = envconfig.Process("", values)
-	if err != nil {
-		logrus.Fatalf("error process envconfig value for %s: %v", env, err)
-		return nil
-	}
-
-	err = yaml.Unmarshal(content, values)
-	if err != nil {
-		logrus.Fatalf("error umarshal yaml config file for %s: %v", env, err)
-		return nil
-	}
 	return values
 }
 

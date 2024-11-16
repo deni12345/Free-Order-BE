@@ -11,18 +11,18 @@ type httpEror struct {
 }
 
 func BadRequest(w http.ResponseWriter, err error) {
-	httpJSONError(w, err.Error(), http.StatusBadGateway)
+	HttpJSONError(w, err.Error(), http.StatusBadGateway)
 }
 
 func InternalError(w http.ResponseWriter, err error) {
-	httpJSONError(w, err.Error(), http.StatusInternalServerError)
+	HttpJSONError(w, err.Error(), http.StatusInternalServerError)
 }
 
 func UnauthenticatedError(w http.ResponseWriter, err error) {
-	httpJSONError(w, err.Error(), http.StatusUnauthorized)
+	HttpJSONError(w, err.Error(), http.StatusUnauthorized)
 }
 
-func httpJSONError(w http.ResponseWriter, error string, code int) {
+func HttpJSONError(w http.ResponseWriter, error string, code int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	json.NewEncoder(w).Encode(httpEror{

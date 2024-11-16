@@ -3,21 +3,23 @@ package auth
 import (
 	"fmt"
 	"github/free-order-be/config"
-	"github/free-order-be/internal/domain"
+	"github/free-order-be/models"
 
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func CreateToken(user *domain.User) (string, error) {
+func CreateToken(user *models.User) (string, error) {
 	token := jwt.NewWithClaims(
 		jwt.SigningMethodHS256,
 		jwt.MapClaims{
-			"userId": user.ID,
-			"exp":    time.Now().Add(24 * time.Hour).Unix(),
+			"userId":    user.ID,
+			"userName":  user.UserName,
+			"userEmail": user.Email,
+			"exp":       time.Now().Add(24 * time.Hour).Unix(),
 		})
-	tokenStr, err := token.SignedString(config.Values.SecretKey)
+	tokenStr, err := token.SignedString([]byte(config.Values.SecretKey))
 	if err != nil {
 		return "", err
 	}

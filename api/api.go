@@ -54,7 +54,7 @@ func (s *Server) publicAPI() http.Handler {
 	router.HandleFunc("/users", s.GetUser).Methods("GET")
 
 	// //Sign in/up with official account
-	// router.HandleFunc("/sign-in", s.SignIn).Methods("POST")
+	router.HandleFunc("/sign-in", s.SignIn).Methods("POST")
 	router.HandleFunc("/sign-up", s.SignUp).Methods("POST")
 
 	// //Sign in/up with google account

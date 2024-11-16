@@ -12,8 +12,8 @@ const (
 type Sheets []*Sheet
 
 type Sheet struct {
-	PK       string    `dynamo:"PK,hash"`
-	SK       string    `dynamo:"SK,range"`
+	PK       *string   `dynamo:"PK,hash"`
+	SK       *string   `dynamo:"SK,range"`
 	Name     string    `dynamo:"Name"`
 	Brand    string    `dynamo:"Brand"`
 	MenuURL  string    `dynamo:"MenuURL"`
@@ -23,18 +23,18 @@ type Sheet struct {
 	Orders   Orders    `dynamo:"-"`
 }
 
-func (s *Sheet) GetPK() string {
-	if s != nil && s.PK != "" {
+func (s *Sheet) GetPK() *string {
+	if s != nil && s.PK != nil {
 		return s.PK
 	}
-	return UNDEFINED
+	return nil
 }
 
-func (s *Sheet) GetSK() string {
-	if s != nil && s.SK != "" {
+func (s *Sheet) GetSK() *string {
+	if s != nil && s.SK != nil {
 		return s.SK
 	}
-	return UNDEFINED
+	return nil
 }
 
 func (s *Sheet) GetName() string {
@@ -73,7 +73,7 @@ func (s *Sheet) GetIsActive() bool {
 }
 
 func (s *Sheet) IsNil() bool {
-	if s.GetPK() != UNDEFINED {
+	if s != nil && s.GetPK() != nil {
 		return false
 	}
 	return true

@@ -7,7 +7,6 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/guregu/dynamo/v2"
-	"github.com/sirupsen/logrus"
 )
 
 type IOrderDAO interface {
@@ -39,7 +38,6 @@ func (o *OrderImpl) CreateRealtime(ctx context.Context, order *d.FirestoreOrder)
 	if err != nil {
 		return err
 	}
-	logrus.Infof("Created document: %+v", order.GetPK())
 	return nil
 }
 
@@ -52,7 +50,7 @@ func (o *OrderImpl) Create(ctx context.Context, order *d.Order) error {
 		return fmt.Errorf("failed to get next id")
 	}
 
-	order.SK = o.createOrderSK(newID)
+	order.SK = createOrderSK(newID)
 	return o.table.Put(order).Run(ctx)
 }
 
@@ -86,6 +84,6 @@ func (o *OrderImpl) FindAllByUser(ctx context.Context, userID string) (d.Orders,
 	return orders, nil
 }
 
-func (o *OrderImpl) createOrderSK(id *uint) string {
+func createOrderSK(id *uint) string {
 	return fmt.Sprintf("ORDER#%v", *id)
 }

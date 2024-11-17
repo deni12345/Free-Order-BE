@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"strconv"
 
@@ -12,7 +13,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/guregu/dynamo/v2"
-	"github.com/sirupsen/logrus"
 	"google.golang.org/api/option"
 )
 
@@ -32,15 +32,22 @@ type DAO struct {
 }
 
 func NewDAO(ctx context.Context, db *dynamo.DB) (*DAO, error) {
-	opt := option.WithCredentialsJSON([]byte(config.Values.FirebaseCredential))
+	var (
+		credential = []byte(config.Values.FirebaseCredential)
+		err        error
+	)
+	if isEncodeBase64(config.Values.FirebaseCredential) {
+		if credential, err = base64.StdEncoding.DecodeString(config.Values.FirebaseCredential); err != nil {
+			return nil, err
+		}
+	}
+	opt := option.WithCredentialsJSON(credential)
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
-		logrus.Infof("error create firebase app: %s", err)
 		return nil, err
 	}
 	firestore, err := app.Firestore(ctx)
 	if err != nil {
-		logrus.Infof("error create firestore app: %s", err)
 		return nil, err
 	}
 
@@ -56,6 +63,11 @@ func NewDAORef(db *dynamo.DB) *DAO {
 	return &DAO{
 		client: db,
 	}
+}
+
+func isEncodeBase64(str string) bool {
+	_, err := base64.StdEncoding.DecodeString(str)
+	return err == nil
 }
 
 func (dao *DAO) NextID(ctx context.Context, table string) (*uint, error) {

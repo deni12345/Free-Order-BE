@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"github/free-order-be/internal/client"
 	"github/free-order-be/internal/dao"
 	"github/free-order-be/models"
 )
@@ -20,6 +21,9 @@ type Logic interface {
 	//Sheet
 	CreateSheet(context.Context, *models.Sheet) (*models.Sheet, error)
 	GetSheet(context.Context, *models.GetSheetReq) (*models.Sheet, error)
+
+	//Shopee
+	GetShopeeMenu(context.Context) (*client.GetDeliveryIDRes, error)
 }
 type LogicImpl struct {
 	SecretKey []byte

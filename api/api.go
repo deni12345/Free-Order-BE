@@ -70,7 +70,9 @@ func (s *Server) publicAPI() http.Handler {
 	router.HandleFunc("/orders", s.GetSheetOrders).Methods("GET")
 	router.HandleFunc("/orders/user", s.GetUserOrders).Methods("GET")
 
-	// router.HandleFunc("/ws", s.HandleWebSocket).Methods("GET")
+	//Shopee routes
+	router.HandleFunc("/shopee-menu", s.GetShopeeMenu).Methods("GET")
+
 	return router
 }
 

@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/guregu/dynamo/v2"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -71,24 +72,28 @@ func toSheet(items []map[string]types.AttributeValue) *d.Sheet {
 		eg    = errgroup.Group{}
 	)
 	for _, item := range items {
-		SK := item["SK"].(*types.AttributeValueMemberS).Value
+		item := item
 		eg.Go(func() error {
-			if strings.Contains(SK, "ORDER#") {
+			SK, ok := item["SK"].(*types.AttributeValueMemberS)
+			if !ok {
+				return fmt.Errorf("failed to get SK")
+			}
+			if strings.Contains(SK.Value, "ORDER#") {
 				var order *d.Order
 				if err := dynamo.UnmarshalItem(item, &order); err != nil {
 					return err
 				}
 				mu.Lock()
+				defer mu.Unlock()
 				sheet.Orders = append(sheet.Orders, order)
-				mu.Unlock()
+				return nil
 
-			} else {
-				return dynamo.UnmarshalItem(item, sheet)
 			}
-			return nil
+			return dynamo.UnmarshalItem(item, sheet)
 		})
 	}
 	if err := eg.Wait(); err != nil {
+		logrus.Infof("error unmarshal sheet: %v", err)
 		return nil
 	}
 	return sheet

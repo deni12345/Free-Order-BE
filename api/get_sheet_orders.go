@@ -11,7 +11,7 @@ import (
 
 func (s Server) GetSheetOrders(w http.ResponseWriter, r *http.Request) {
 	req := &models.GetSheetOrdersReq{}
-	logrus.Info(req)
+	logrus.Infof("req %v", req)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		logrus.Infof("[API] GetOrder on err: %s \n", err)
 		BadRequest(w, err)

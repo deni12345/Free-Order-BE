@@ -22,8 +22,8 @@ var (
 
 func init() {
 	var err error
-	config.LoadConfig()
 	config.InitLogrus()
+	config.LoadConfig()
 
 	conn := config.Values.ConnectDB(context.Background())
 	daoInst, err = dao.NewDAO(context.Background(), conn)

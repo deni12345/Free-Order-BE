@@ -18,11 +18,11 @@ func (cfg *configValue) ResolveEndpoint(ctx context.Context, params dynamodb.End
 	var err error
 	var endpointURL *url.URL
 
-	endpointString := cfg.DynamodbEndpoint
-	if cfg.Env != LOCAL && cfg.DB.Region != "" {
-		endpointString = fmt.Sprintf("https://dynamodb.%s.amazonaws.com", cfg.DB.Region)
-	}
-
+	// endpointString := cfg.DynamodbEndpoint
+	// if cfg.Env != LOCAL && cfg.DB.Region != "" {
+	// 	endpointString = fmt.Sprintf("https://dynamodb.%s.amazonaws.com", cfg.DB.Region)
+	// }
+	endpointString := fmt.Sprintf("https://dynamodb.%s.amazonaws.com", cfg.DB.Region)
 	if endpointURL, err = url.Parse(endpointString); err != nil {
 		return smithyendpoints.Endpoint{}, err
 	}

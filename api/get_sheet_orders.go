@@ -11,12 +11,13 @@ import (
 
 func (s Server) GetSheetOrders(w http.ResponseWriter, r *http.Request) {
 	req := &models.GetSheetOrdersReq{}
+	logrus.Info(req)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		logrus.Infof("[API] GetOrder on err: %s \n", err)
 		BadRequest(w, err)
 		return
 	}
-
+	logrus.Infof("Test %v", req)
 	resp, err := s.logic.GetSheetOrders(r.Context(), req)
 	if err != nil {
 		logrus.Infof("[API] GetOrders on err: %s \n", err)

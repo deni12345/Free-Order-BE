@@ -12,6 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/guregu/dynamo/v2"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/api/option"
 )
 
@@ -34,10 +35,12 @@ func NewDAO(ctx context.Context, db *dynamo.DB) (*DAO, error) {
 	opt := option.WithCredentialsJSON([]byte(config.Values.FirebaseCredential))
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
+		logrus.Infof("error create firebase app: %s", err)
 		return nil, err
 	}
 	firestore, err := app.Firestore(ctx)
 	if err != nil {
+		logrus.Infof("error create firestore app: %s", err)
 		return nil, err
 	}
 

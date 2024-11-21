@@ -23,11 +23,12 @@ type Logic interface {
 	GetSheet(context.Context, *models.GetSheetReq) (*models.Sheet, error)
 
 	//Shopee
-	GetShopeeMenu(context.Context) (*client.GetDeliveryIDRes, error)
+	GetShopeeMenu(context.Context) (*client.GetDeliveryIDResp, error)
 }
 type LogicImpl struct {
 	SecretKey []byte
 	Client    *dao.DAO
+	Shopee    *client.ShopeeC
 }
 
 func NewLogicImpl(dao *dao.DAO) *LogicImpl {

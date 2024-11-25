@@ -16,7 +16,7 @@ type GetDeliveryIDResp struct {
 }
 
 func (s *ShopeeImpl) GetDeliveryID(req *GetDeliveryIDReq) (*GetDeliveryIDResp, error) {
-	url, err := s.buildURL("Restaurant", req.URL)
+	url, err := s.buildURL(Restaurant, req.URL)
 	if err != nil {
 		return nil, err
 	}

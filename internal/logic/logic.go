@@ -28,7 +28,7 @@ type Logic interface {
 type LogicImpl struct {
 	SecretKey []byte
 	Client    *dao.DAO
-	Shopee    *client.ShopeeC
+	Shopee    *client.Shopee
 }
 
 func NewLogicImpl(dao *dao.DAO) *LogicImpl {

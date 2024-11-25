@@ -3,8 +3,6 @@ package domain
 import (
 	"github/free-order-be/models"
 	"time"
-
-	"github.com/sirupsen/logrus"
 )
 
 type Users []*User
@@ -92,7 +90,6 @@ func BuildDomainUser(v *models.User) *User {
 	if v == nil {
 		return nil
 	}
-	logrus.Infof("Test %v", v.Password)
 	hashPasword, err := HashPassword(v.Password)
 	if err != nil {
 		return nil

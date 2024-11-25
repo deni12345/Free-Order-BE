@@ -6,11 +6,18 @@ import (
 	"net/url"
 )
 
+type Endpoint int
+
+const (
+	Dishes Endpoint = iota
+	Restaurant
+)
+
 var (
 	baseShopeeURL = "https://gappapi.deliverynow.vn/api"
-	endpointsMap  = map[string]string{
-		"Restaurant": "/delivery/get_from_url?url=%s",
-		"Dishes":     "/dish/get_delivery_dishes?id_type=%s&request_id=%s",
+	endpointsMap  = map[Endpoint]string{
+		Dishes:     "/dish/get_delivery_dishes?id_type=%s&request_id=%s",
+		Restaurant: "/delivery/get_from_url?url=%s",
 	}
 )
 
@@ -19,7 +26,7 @@ type Shopee interface {
 }
 
 type ShopeeImpl struct {
-	EndpointsMap map[string]string
+	EndpointsMap map[Endpoint]string
 	HTTPClient   *http.Client
 }
 
@@ -61,7 +68,7 @@ func (s *ShopeeTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	return s.transport.RoundTrip(req)
 }
 
-func (s *ShopeeImpl) buildURL(endpoint, urlPath string) (string, error) {
+func (s *ShopeeImpl) buildURL(endpoint Endpoint, urlPath string) (string, error) {
 	return url.JoinPath(baseShopeeURL, s.EndpointsMap[endpoint], urlPath)
 }
 

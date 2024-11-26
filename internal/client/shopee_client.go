@@ -16,8 +16,8 @@ const (
 var (
 	baseShopeeURL = "https://gappapi.deliverynow.vn/api"
 	endpointsMap  = map[Endpoint]string{
-		Dishes:     "/dish/get_delivery_dishes?id_type=%s&request_id=%s",
-		Restaurant: "/delivery/get_from_url?url=%s",
+		Dishes:     "/v6/buyer/store/dishes",
+		Restaurant: "/delivery/get_from_url",
 	}
 )
 
@@ -41,13 +41,14 @@ func NewClientImpl() *ShopeeImpl {
 
 func NewShopeeTransport() *ShopeeTransport {
 	header := map[string]string{
-		"X-Foody-Access-Token":    "",
-		"X-Foody-Api-Version":     "1",
-		"X-Foody-App-Type":        "1004",
-		"X-Foody-Client-Id":       "",
-		"X-Foody-Client-Language": "vi",
-		"X-Foody-Client-Type":     "1",
-		"X-Foody-Client-Version":  "3.0.0",
+		"x-foody-client-id":             "",
+		"x-foody-client-language":       "vi",
+		"x-foody-api-version":           "1",
+		"x-foody-app-type":              "3000",
+		"x-foody-client-type":           "3",
+		"X-Shopee-Client-Timezone":      "Asia/Ho_Chi_Minh",
+		"x-foody-client-version":        "3.38.28",
+		"x-foody-client-bundle-version": "603407",
 	}
 
 	return &ShopeeTransport{
@@ -68,8 +69,18 @@ func (s *ShopeeTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	return s.transport.RoundTrip(req)
 }
 
-func (s *ShopeeImpl) buildURL(endpoint Endpoint, urlPath string) (string, error) {
-	return url.JoinPath(baseShopeeURL, s.EndpointsMap[endpoint], urlPath)
+func (s *ShopeeImpl) buildURL(endpoint Endpoint, query url.Values) url.URL {
+	url := url.URL{
+		Scheme: "https",
+		Host:   baseShopeeURL,
+		Path:   s.EndpointsMap[endpoint],
+	}
+
+	if query != nil {
+		url.ForceQuery = true
+		url.RawQuery = query.Encode()
+	}
+	return url
 }
 
 func (s *ShopeeImpl) Do(method string, url string, resp interface{}) error {

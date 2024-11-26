@@ -16,12 +16,9 @@ type GetDishesResp struct {
 }
 
 func (s *ShopeeImpl) GetDishes(req *GetDishesReq) (*GetDishesResp, error) {
-	url, err := s.buildURL(Dishes, req.URL)
-	if err != nil {
-		return nil, err
-	}
+	url := s.buildURL(Dishes, req.URL)
 	var response *GetDishesResp
-	if err := s.Do(http.MethodGet, url, response); err != nil {
+	if err := s.Do(http.MethodGet, url.String(), response); err != nil {
 		return nil, err
 	}
 	return response, nil

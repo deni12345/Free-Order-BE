@@ -1,5 +1,9 @@
 package models
 
+type ShopeeDishesResp struct {
+	Catalogs Catalogs `json:"catalogs"`
+}
+
 type Catalogs []*Catalog
 
 type Catalog struct {

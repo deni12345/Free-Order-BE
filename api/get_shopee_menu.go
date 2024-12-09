@@ -7,7 +7,7 @@ import (
 )
 
 func (s Server) GetShopeeMenu(w http.ResponseWriter, r *http.Request) {
-	res, err := s.logic.GetShopeeMenu(r.Context())
+	res, err := s.logic.GetShopeeMenu(r.Context(), r.URL.Query().Get("endpoint"))
 	if err != nil {
 		m.InternalError(w, err)
 		return

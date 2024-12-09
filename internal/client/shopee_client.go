@@ -22,18 +22,19 @@ var (
 )
 
 type Shopee interface {
-	GetRestaurant(*GetDeliveryIDReq) (*GetDeliveryIDResp, error)
+	GetDishes(*GetDishesReq) (*GetDishesResp, error)
+	GetRestaurantID(*GetDeliveryIDReq) (*GetRestaurantIDResp, error)
 }
 
 type ShopeeImpl struct {
 	EndpointsMap map[Endpoint]string
-	HTTPClient   *http.Client
+	HttpClient   *http.Client
 }
 
 func NewClientImpl() *ShopeeImpl {
 	return &ShopeeImpl{
 		EndpointsMap: endpointsMap,
-		HTTPClient: &http.Client{
+		HttpClient: &http.Client{
 			Transport: NewShopeeTransport(),
 		},
 	}
@@ -88,7 +89,7 @@ func (s *ShopeeImpl) Do(method string, url string, resp interface{}) error {
 	if err != nil {
 		return err
 	}
-	htppResp, err := s.HTTPClient.Do(httpReq)
+	htppResp, err := s.HttpClient.Do(httpReq)
 	if err != nil {
 		return err
 	}

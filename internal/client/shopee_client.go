@@ -14,10 +14,10 @@ const (
 )
 
 var (
-	baseShopeeURL = "https://gappapi.deliverynow.vn/api"
+	baseShopeeURL = "gappapi.deliverynow.vn"
 	endpointsMap  = map[Endpoint]string{
-		Dishes:     "/v6/buyer/store/dishes",
-		Restaurant: "/delivery/get_from_url",
+		Dishes:     "api/v6/buyer/store/dishes",
+		Restaurant: "api/delivery/get_from_url",
 	}
 )
 
@@ -31,7 +31,7 @@ type ShopeeImpl struct {
 	HttpClient   *http.Client
 }
 
-func NewClientImpl() *ShopeeImpl {
+func NewClient() *ShopeeImpl {
 	return &ShopeeImpl{
 		EndpointsMap: endpointsMap,
 		HttpClient: &http.Client{
@@ -78,7 +78,6 @@ func (s *ShopeeImpl) buildURL(endpoint Endpoint, query url.Values) url.URL {
 	}
 
 	if query != nil {
-		url.ForceQuery = true
 		url.RawQuery = query.Encode()
 	}
 	return url

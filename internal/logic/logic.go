@@ -35,5 +35,6 @@ func NewLogicImpl(dao *dao.DAO) *LogicImpl {
 	return &LogicImpl{
 		Client:    dao,
 		SecretKey: []byte("Idasdasdasdnasdnjknxzm1323"),
+		Shopee:    client.NewClient(),
 	}
 }

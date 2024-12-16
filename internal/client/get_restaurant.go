@@ -23,11 +23,13 @@ func (res *GetRestaurantIDResp) GetRestaurantID() uint {
 
 func (s *ShopeeImpl) GetRestaurantID(req *GetDeliveryIDReq) (*GetRestaurantIDResp, error) {
 	url := s.buildURL(Restaurant, req.toQuery())
-	var response *GetRestaurantIDResp
-	if err := s.Do(http.MethodGet, url.String(), response); err != nil {
+	var res struct {
+		Reply *GetRestaurantIDResp `json:"reply"`
+	}
+	if err := s.Do(http.MethodGet, url.String(), &res); err != nil {
 		return nil, err
 	}
-	return response, nil
+	return res.Reply, nil
 }
 
 func (req *GetDeliveryIDReq) toQuery() url.Values {

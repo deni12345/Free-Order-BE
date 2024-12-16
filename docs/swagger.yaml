@@ -1,0 +1,14 @@
+info:
+  contact:
+    email: liemtran1414@gmail.com
+    name: LiemDeni
+  description: '```{'
+  title: Free Order APIs
+  version: "1.0"
+paths: {}
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -92,8 +92,9 @@ func (s *ShopeeImpl) Do(method string, url string, resp interface{}) error {
 	if err != nil {
 		return err
 	}
+
 	defer htppResp.Body.Close()
-	if err = json.NewDecoder(htppResp.Body).Decode(resp); err != nil {
+	if err = json.NewDecoder(htppResp.Body).Decode(&resp); err != nil {
 		return err
 	}
 	return nil

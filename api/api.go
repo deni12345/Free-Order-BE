@@ -16,6 +16,20 @@ import (
 	people "google.golang.org/api/people/v1"
 )
 
+//	@title			Free Order APIs
+//	@version		1.0
+//	@description	```{
+// Free Order APIs containt api using for web application with the same name as Free Order,
+// which is using for placing drinks and foods }``
+
+// @contact.name				LiemDeni
+// @contact.email				liemtran1414@gmail.com
+// @host:						localhost:8080
+// @BasePath:					/api
+//
+// @securityDefinitions.apikey	BearerAuth
+// @in							header
+// @name						Authorization
 type Server struct {
 	Router      *mux.Router
 	logic       logic.Logic

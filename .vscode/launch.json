@@ -10,6 +10,7 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}\\cmd\\.",
+            "cwd": "${workspaceFolder}",
             "dlvFlags": ["--check-go-version=false"] 
         }
     ]

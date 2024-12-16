@@ -29,11 +29,13 @@ type MenuDish struct {
 
 func (s *ShopeeImpl) GetDishes(req *GetDishesReq) (*GetDishesResp, error) {
 	url := s.buildURL(Dishes, req.toQuery())
-	var shopeeResp *models.ShopeeDishesResp
-	if err := s.Do(http.MethodGet, url.String(), shopeeResp); err != nil {
+	var res struct {
+		Data *models.ShopeeDishesResp `json:"data"`
+	}
+	if err := s.Do(http.MethodGet, url.String(), &res); err != nil {
 		return nil, err
 	}
-	return &GetDishesResp{toMenuDishes(shopeeResp)}, nil
+	return &GetDishesResp{toMenuDishes(res.Data)}, nil
 }
 
 func toMenuDishes(resp *models.ShopeeDishesResp) (menu []*MenuDish) {
@@ -42,14 +44,14 @@ func toMenuDishes(resp *models.ShopeeDishesResp) (menu []*MenuDish) {
 		mu  sync.Mutex
 	)
 	for _, catalog := range resp.Catalogs {
-		erg.Go(func() error {
-			for _, dish := range catalog.Dishes {
+		for _, dish := range catalog.Dishes {
+			erg.Go(func() error {
 				mu.Lock()
 				defer mu.Unlock()
 				menu = append(menu, getMenuDish(dish))
-			}
-			return nil
-		})
+				return nil
+			})
+		}
 	}
 	if err := erg.Wait(); err != nil {
 		return nil

@@ -1,0 +1,20 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "```{",
+        "title": "Free Order APIs",
+        "contact": {
+            "name": "LiemDeni",
+            "email": "liemtran1414@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "paths": {},
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

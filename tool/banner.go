@@ -1,13 +1,13 @@
-package custom
+package tool
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 )
 
-func InitBanner() {
+func ShowBanner() {
 	var banner string
 	colors := []string{
 		"\033[31m",       // Red
@@ -18,7 +18,7 @@ func InitBanner() {
 		"\033[38;5;57m",  // Indigo
 		"\033[35m",       // Violet
 	}
-	data, err := ioutil.ReadFile("./banner/ascii-art.txt")
+	data, err := os.ReadFile("./tool/ascii-art.txt")
 	if err != nil {
 		log.Fatalf("Failed to read file: %v", err)
 	}

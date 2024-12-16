@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-type httpEror struct {
+type HttpError struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 }
@@ -25,7 +25,7 @@ func UnauthenticatedError(w http.ResponseWriter, err error) {
 func HttpJSONError(w http.ResponseWriter, error string, code int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
-	json.NewEncoder(w).Encode(httpEror{
+	json.NewEncoder(w).Encode(HttpError{
 		Code:    code,
 		Message: error,
 	})
